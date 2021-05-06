@@ -8,6 +8,9 @@
 
     public class DeleteProductOutputModel : BaseProductOutputModel, IMapFrom<Product>
     {
+        [Display(Name = "Short Description")]
+        public string ShortDescription { get; set; }
+
         [Display(Name = "Added by User")]
         public string AddedByUserName { get; set; }
 

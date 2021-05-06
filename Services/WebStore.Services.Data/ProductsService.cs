@@ -58,9 +58,16 @@
             }
         }
 
-        public List<Product> GetAll()
+        public IEnumerable<T> GetAll<T>()
         {
-            var products = this.productsRepository.AllAsNoTrackingWithDeleted().ToList();
+            var products = this.productsRepository.AllAsNoTracking()
+                .To<T>();
+            return products;
+        }
+        public IEnumerable<T> GetAllWithDeleted<T>()
+        {
+            var products = this.productsRepository.AllAsNoTrackingWithDeleted()
+                .To<T>();
             return products;
         }
 
@@ -149,6 +156,12 @@
         {
             return this.productsRepository.AllAsNoTrackingWithDeleted()
                 .FirstOrDefault(x => x.Id == id);
+        }
+
+        private IEnumerable<Product> GetAll()
+        {
+            var products = this.productsRepository.AllAsNoTrackingWithDeleted().ToList();
+            return products;
         }
     }
 }

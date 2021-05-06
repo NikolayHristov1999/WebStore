@@ -15,7 +15,9 @@ namespace WebStore.Services.Data
 
         Task UpdateAsync(int id, EditProductInputModel inputModel);
 
-        List<Product> GetAll();
+        IEnumerable<T> GetAll<T>();
+
+        IEnumerable<T> GetAllWithDeleted<T>();
 
         T GetById<T>(int id);
 

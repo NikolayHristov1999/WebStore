@@ -10,6 +10,9 @@
 
     public class DetailsProductOutputModel : BaseProductOutputModel, IMapFrom<Product>, IHaveCustomMappings
     {
+        [Display(Name = "Short Description")]
+        public string ShortDescription { get; set; }
+
         [Display(Name = "Added by User")]
         public string AddedByUserName { get; set; }
 

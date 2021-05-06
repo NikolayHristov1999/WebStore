@@ -10,9 +10,6 @@
 
         public decimal Price { get; set; }
 
-        [Display(Name = "Short Description")]
-        public string ShortDescription { get; set; }
-
         [Display(Name = "Image URL")]
         public string ImageUrl { get; set; }
 

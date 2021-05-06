@@ -1,0 +1,18 @@
+﻿.caption {
+    height: 90px !important;
+}
+
+.product-item-container {
+    background: #fff;
+    margin-bottom: 25px;
+}
+
+.min-img-height-products-list {
+    height: 250px !important;
+}
+
+.img-in-item-contrainer {
+    height: 100%; 
+    width: 100%; 
+    object-fit: contain !important;
+}

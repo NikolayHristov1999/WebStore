@@ -35,9 +35,14 @@
         }
 
         // GET: Products
+        public IActionResult All()
+        {
+            return this.View(this.productsService.GetAll<ListProductOutputModel>());
+        }
+
         public IActionResult Index()
         {
-            return this.View(this.productsService.GetAll());
+            return this.View(this.productsService.GetAllWithDeleted<DetailsProductOutputModel>());
         }
 
         // GET: Products/Create
@@ -163,5 +168,6 @@
             await this.productsService.DeleteProductById(id);
             return this.RedirectToAction(nameof(Index));
         }
+
     }
 }
