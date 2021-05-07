@@ -40,6 +40,11 @@
             return this.View(this.productsService.GetAll<ListProductOutputModel>());
         }
 
+        public IActionResult ById()
+        {
+            return this.View(this.productsService.GetById<SingleProductOutputModel>(1));
+        }
+
         public IActionResult Index()
         {
             return this.View(this.productsService.GetAllWithDeleted<DetailsProductOutputModel>());

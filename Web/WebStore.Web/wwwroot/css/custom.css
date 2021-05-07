@@ -16,3 +16,11 @@
     width: 100%; 
     object-fit: contain !important;
 }
+.single-product-description {
+    font-family: Roboto, sans-serif;
+    font-weight: 300 !important ;
+}
+
+.pl-0{
+    padding-left: 0!important;
+}
