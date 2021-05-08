@@ -8,11 +8,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/mdb.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/mdb-pro.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/mdb.ecommerce.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    @await this.RenderSectionAsync("Styles", required: false)
 
 </head>
 <body>
@@ -63,10 +61,9 @@
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js" asp-append-version="true"></script>
     <script src="~/js/mdb.min.js" asp-append-version="true"></script>
+    <script src="~/js/mdb.ecommerce.min.js" asp-append-version="true"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
-
 
     @await this.RenderSectionAsync("Scripts", required: false)
 </body>
