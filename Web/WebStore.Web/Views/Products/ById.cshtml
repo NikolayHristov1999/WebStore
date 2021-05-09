@@ -1,6 +1,6 @@
 ﻿@model WebStore.Web.ViewModels.Product.SingleProductOutputModel
 @{
-    ViewData["Title"] = Model.Name;
+    ViewData["Title"] = "Product";
 }
 
 <!--Section: Block Content-->
@@ -85,8 +85,8 @@
             </div>
             <div class="col-md-6">
 
-                <h5>Fantasy T-shirt</h5>
-                <p class="mb-2 text-muted text-uppercase small">Shirts</p>
+                <h1 class="h5">@Model.Name</h1>
+                <p class="mb-2 text-muted text-uppercase small">@Model.Category</p>
                 <ul class="rating">
                     <li>
                         <i class="fas fa-star fa-sm text-primary"></i>
@@ -104,11 +104,8 @@
                         <i class="far fa-star fa-sm text-primary"></i>
                     </li>
                 </ul>
-                <p><span class="mr-1"><strong>$12.99</strong></span></p>
-                <p class="pt-1">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, sapiente illo. Sit
-                    error voluptas repellat rerum quidem, soluta enim perferendis voluptates laboriosam. Distinctio,
-                    officia quis dolore quos sapiente tempore alias.
+                <p><span class="mr-1"><strong>$@Model.Price</strong></span></p>
+                <p class="pt-1">@Model.ShortDescription
                 </p>
                 <div class="table-responsive">
                     <table class="table table-sm table-borderless mb-0">
@@ -196,7 +193,7 @@
         <div class="tab-content" id="advancedTabContent">
             <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
                 <h5>Product Description</h5>
-                <p class="small text-muted text-uppercase mb-2">Shirts</p>
+                <p class="small text-muted text-uppercase mb-2">@Model.Category</p>
                 <ul class="rating">
                     <li>
                         <i class="fas fa-star fa-sm text-primary"></i>
@@ -214,7 +211,7 @@
                         <i class="far fa-star fa-sm text-primary"></i>
                     </li>
                 </ul>
-                <h6>12.99 $</h6>
+                <h6>@Model.Price$</h6>
                 <p class="pt-1">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, sapiente illo. Sit
                     error voluptas repellat rerum quidem, soluta enim perferendis voluptates laboriosam. Distinctio,
