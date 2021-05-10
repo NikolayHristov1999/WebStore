@@ -7,6 +7,7 @@ namespace WebStore.Data.Models
     using WebStore.Data.Common.Models;
 
     using Microsoft.AspNetCore.Identity;
+    using System.ComponentModel.DataAnnotations;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
     {
@@ -16,7 +17,13 @@ namespace WebStore.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
+            this.Contacts = new HashSet<Contact>();
+            this.Orders = new HashSet<Order>();
+            this.Votes = new HashSet<Vote>();
         }
+
+        [DataType("Date")]
+        public DateTime? DateOfBirth { get; set; }
 
         // Audit info
         public DateTime CreatedOn { get; set; }
@@ -33,5 +40,13 @@ namespace WebStore.Data.Models
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+
+        public virtual ICollection<Contact> Contacts { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public virtual ICollection<Vote> Votes { get; set; }
     }
 }

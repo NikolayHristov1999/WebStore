@@ -40,9 +40,20 @@
             return this.View(this.productsService.GetAll<ListProductOutputModel>());
         }
 
-        public IActionResult ById()
+        public IActionResult ById(int? id)
         {
-            return this.View(this.productsService.GetById<SingleProductOutputModel>(1));
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var product = this.productsService.GetById<SingleProductOutputModel>((int)id);
+            if (product == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(product);
         }
 
         public IActionResult Index()

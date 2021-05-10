@@ -5773,7 +5773,6 @@ a.waves-effect, a.waves-light {
 }
 
 .btn {
-    margin: .375rem;
     color: inherit;
     text-transform: uppercase;
     word-wrap: break-word;
@@ -5787,8 +5786,6 @@ a.waves-effect, a.waves-light {
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    padding: .84rem 2.14rem;
-    font-size: .81rem
 }
 
     .btn-primary.focus, .btn-primary:focus, .btn:active, .btn:focus, .btn:hover {
@@ -8557,7 +8554,9 @@ table.table a.btn.btn-black {
 .navbar.navbar-light .breadcrumb .nav-item .nav-link, .navbar.navbar-light .navbar-nav .nav-item .nav-link {
     color: #000;
     -webkit-transition: .35s;
-    transition: .35s
+    transition: .35s;
+    text-transform: none;
+    font-size: 1rem;
 }
 
     .navbar.navbar-light .breadcrumb .nav-item .nav-link:hover, .navbar.navbar-light .navbar-nav .nav-item .nav-link:hover {

@@ -32,6 +32,12 @@
 
         public DbSet<CategoryProduct> CategoriesProducts { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Vote> Votes { get; set; }
+
+        public DbSet<Contact> Contacts { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -55,6 +61,9 @@
         {
             builder.Entity<CategoryProduct>()
                 .HasKey(x => new { x.ProductId, x.CategoryId });
+
+            builder.Entity<Vote>()
+                .HasKey(x => new { x.ProductId, x.UserId });
             // Needed for Identity models configuration
             base.OnModelCreating(builder);
 
