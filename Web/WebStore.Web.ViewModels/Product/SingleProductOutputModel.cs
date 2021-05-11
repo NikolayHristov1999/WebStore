@@ -23,7 +23,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Product, DetailsProductOutputModel>()
+            configuration.CreateMap<Product, SingleProductOutputModel>()
                 .ForMember(x => x.AddedByUserName, opt => opt.MapFrom(x => x.AddedByUser.UserName ?? x.AddedByUser.Email))
                 .ForMember(x => x.Category, opt => opt.MapFrom(x => x.Categories.FirstOrDefault().Category.Name));
         }

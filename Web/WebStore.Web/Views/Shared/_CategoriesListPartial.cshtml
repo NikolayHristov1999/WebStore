@@ -1,0 +1,19 @@
+﻿@model IEnumerable<WebStore.Web.ViewModels.Categories.CategoryListOutputModel>
+
+<div class="row">
+    @foreach (var category in this.Model)
+    {
+        <div class="col-lg-3 col-md-6 offset-md-0 offset-sm-1 col-sm-10 offset-sm-1 my-lg-0 my-2">
+            <div class="card">
+                <div class="min-img-height-products-list">
+                    <a asp-action="ById" asp-route-id="@category.Id"><img src="@category.ImageUrl" class="card-img-top mr-3 img-in-item-contrainer"></a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">@category.Name</h5>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

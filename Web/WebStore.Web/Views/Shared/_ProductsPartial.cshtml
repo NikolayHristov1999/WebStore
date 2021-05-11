@@ -1,0 +1,29 @@
+﻿@model IEnumerable<WebStore.Web.ViewModels.Product.ListProductOutputModel>
+
+<div class="d-flex align-items-center justify-content-between py-4 results">
+    <div>Showing 1-40 of 350</div>
+    <div>
+        <span>Price: </span> <select name="price" id="price">
+            <option value="l2h" selected>low to high</option>
+            <option value="l2h">high to low</option>
+        </select>
+    </div>
+</div>
+<div class="row">
+    @foreach (var product in this.Model)
+    {
+        <div class="col-lg-3 col-md-6 offset-md-0 offset-sm-1 col-sm-10 offset-sm-1 my-lg-0 my-2">
+            <div class="card">
+                <div class="min-img-height-products-list">
+                    <a asp-controller="Products" asp-action="ById" asp-route-id="@product.Id"><img src="@product.ImageUrl" class="card-img-top mr-3 img-in-item-contrainer"></a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center caption">@product.Name</h5>
+                    <p class="card-text text-center text-muted ">@product.Price.ToString("f2") lv.</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

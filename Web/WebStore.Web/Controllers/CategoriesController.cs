@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,31 +24,56 @@ namespace WebStore.Web.Controllers
             this.categoriesService = categoriesService;
         }
 
-        // GET: Categories
-        public async Task<IActionResult> Index()
+        public IActionResult All()
         {
-            return View(await _context.Categories.ToListAsync());
+            return this.View(this.categoriesService.GetAllRootCategories<CategoryListOutputModel>());
         }
 
-        // GET: Categories/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET : Categories/ById/5
+        public IActionResult ById(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var category = this.categoriesService.GetById<SingleCategoryOutputModel>((int)id);
             if (category == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            return View(category);
+            return this.View(category);
+        }
+
+        // GET: Categories
+        [Authorize]
+        public IActionResult Index()
+        {
+            var categories = this.categoriesService.GetAllWithDeleted<DetailsCategoryOutputModel>();
+            return this.View(categories);
+        }
+
+        // GET: Categories/Details/5
+        [Authorize]
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var category = this.categoriesService.GetById<DetailsCategoryOutputModel>((int)id);
+            if (category == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(category);
         }
 
         // GET: Categories/Create
+        [Authorize]
         public IActionResult Create()
         {
             var categoryViewModel = new CategoryInputModel();
@@ -58,6 +84,7 @@ namespace WebStore.Web.Controllers
         // POST: Categories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryInputModel categoryInputModel)
@@ -76,54 +103,45 @@ namespace WebStore.Web.Controllers
         }
 
         // GET: Categories/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [Authorize]
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
+            var category = this.categoriesService.GetProductEditModelById((int)id);
             if (category == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
-            return View(category);
+
+            return this.View(category);
         }
 
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,ImageUrl,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Category category)
+        public async Task<IActionResult> Edit(int id, EditCategoryInputModel category)
         {
             if (id != category.Id)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                category.Categories = this.categoriesService.GetCategoriesAsKeyValuePairs((int)id);
+                return this.View(category);
             }
-            return View(category);
+
+            await this.categoriesService.UpdateAsync(id, category);
+
+            return this.RedirectToAction(nameof(this.Index));
         }
 
         // GET: Categories/Delete/5

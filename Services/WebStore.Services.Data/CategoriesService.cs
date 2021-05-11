@@ -7,7 +7,9 @@
     using System.Threading.Tasks;
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
+    using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.Categories;
+    using WebStore.Web.ViewModels.Product;
 
     public class CategoriesService : ICategoriesService
     {
@@ -36,9 +38,91 @@
 
         }
 
-        public IEnumerable<KeyValuePair<string, string>> GetCategoriesAsKeyValuePairs()
+        public async Task UpdateAsync(int id, EditCategoryInputModel inputModel)
+        {
+            var category = this.categoriesRepository.AllWithDeleted().FirstOrDefault(x => x.Id == id);
+            category.Name = inputModel.Name;
+            category.Description = inputModel.Description;
+            category.ImageUrl = inputModel.ImageUrl;
+            category.ModifiedOn = DateTime.UtcNow;
+
+            if (category.IsDeleted == false && inputModel.IsDeleted)
+            {
+                category.DeletedOn = DateTime.UtcNow;
+            }
+
+            category.IsDeleted = inputModel.IsDeleted;
+
+            var isValidated = int.TryParse(inputModel.CategoryId, out int categoryId);
+            if (isValidated && this.GetCategoryName(categoryId) != null)
+            {
+                category.ParentCategoryId = categoryId;
+            }
+            else
+            {
+                category.ParentCategoryId = null;
+            }
+
+            await this.categoriesRepository.SaveChangesAsync();
+        }
+
+        public EditCategoryInputModel GetProductEditModelById(int id)
+        {
+            var category = this.GetCategoryById(id);
+
+            if (category == null)
+            {
+                return null;
+            }
+
+            var model = new EditCategoryInputModel
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description,
+                ImageUrl = category.ImageUrl,
+                IsDeleted = category.IsDeleted,
+                Categories = this.GetCategoriesAsKeyValuePairs(id),
+            };
+
+            int? categoryId = category.ParentCategoryId;
+            if (categoryId != null)
+            {
+                model.CategoryId = categoryId.ToString();
+            }
+
+            return model;
+        }
+
+        public IEnumerable<T> GetAll<T>()
+        {
+            return this.categoriesRepository.AllAsNoTracking().To<T>();
+        }
+
+        public IEnumerable<T> GetAllWithDeleted<T>()
+        {
+            return this.categoriesRepository.AllAsNoTrackingWithDeleted().To<T>();
+        }
+
+        public T GetById<T>(int id)
+        {
+            var category = this.categoriesRepository.AllAsNoTracking().Where(x => id == x.Id)
+                .To<T>().FirstOrDefault();
+
+            return category;
+        }
+
+        public IEnumerable<T> GetAllRootCategories<T>()
+        {
+            return this.categoriesRepository.AllAsNoTrackingWithDeleted()
+                .Where(x => x.ParentCategoryId == null)
+                .To<T>();
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> GetCategoriesAsKeyValuePairs(int categoryId = 0)
         {
             return this.categoriesRepository.AllAsNoTracking()
+                .Where(x => x.Id != categoryId)
                 .OrderBy(x => x.Products.Count())
                 .Select(x => new
                 {
@@ -57,7 +141,7 @@
 
         private Category GetCategoryById(int id)
         {
-            return this.categoriesRepository.AllAsNoTracking()
+            return this.categoriesRepository.AllAsNoTrackingWithDeleted()
                 .FirstOrDefault(x => id == x.Id);
         }
     }

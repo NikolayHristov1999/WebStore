@@ -31,5 +31,7 @@
         public Category ParentCategory { get; set; }
 
         public ICollection<CategoryProduct> Products { get; set; }
+
+        public ICollection<Category> ChildCategories { get; set; }
     }
 }

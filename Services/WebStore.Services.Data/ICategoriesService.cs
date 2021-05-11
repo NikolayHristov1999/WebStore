@@ -8,10 +8,22 @@
 
     public interface ICategoriesService
     {
-        public IEnumerable<KeyValuePair<string, string>> GetCategoriesAsKeyValuePairs();
+        public IEnumerable<KeyValuePair<string, string>> GetCategoriesAsKeyValuePairs(int categoryId = 0);
+
+        EditCategoryInputModel GetProductEditModelById(int id);
+
+        Task UpdateAsync(int id, EditCategoryInputModel inputModel);
 
         Task CreateAsync(CategoryInputModel input);
 
         string GetCategoryName(int id);
+
+        IEnumerable<T> GetAll<T>();
+
+        IEnumerable<T> GetAllWithDeleted<T>();
+
+        IEnumerable<T> GetAllRootCategories<T>();
+
+        T GetById<T>(int id);
     }
 }

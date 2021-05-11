@@ -1,0 +1,9 @@
+﻿@model IEnumerable<WebStore.Web.ViewModels.Categories.CategoryListOutputModel>
+
+@{
+    ViewData["Title"] = "All Categories";
+}
+
+<h1>@this.ViewData["Title"]</h1>
+<hr />
+@await Html.PartialAsync($"../Shared/_CategoriesListPartial", this.Model)

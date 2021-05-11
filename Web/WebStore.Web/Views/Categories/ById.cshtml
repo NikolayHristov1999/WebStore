@@ -1,0 +1,16 @@
+﻿@model WebStore.Web.ViewModels.Categories.SingleCategoryOutputModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+<p>@Model.Description</p>
+<hr />
+@if (this.Model.ChildCategories.Count > 0)
+{
+    <h3>Subcategories</h3>
+    @await Html.PartialAsync($"../Shared/_CategoriesListPartial", this.Model.ChildCategories)
+    <hr />
+}
+<h3>Products</h3>
+@await Html.PartialAsync($"../Shared/_ProductsPartial", this.Model.Products)

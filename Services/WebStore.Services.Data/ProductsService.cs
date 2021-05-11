@@ -64,6 +64,7 @@
                 .To<T>();
             return products;
         }
+
         public IEnumerable<T> GetAllWithDeleted<T>()
         {
             var products = this.productsRepository.AllAsNoTrackingWithDeleted()
@@ -156,12 +157,6 @@
         {
             return this.productsRepository.AllAsNoTrackingWithDeleted()
                 .FirstOrDefault(x => x.Id == id);
-        }
-
-        private IEnumerable<Product> GetAll()
-        {
-            var products = this.productsRepository.AllAsNoTrackingWithDeleted().ToList();
-            return products;
         }
     }
 }

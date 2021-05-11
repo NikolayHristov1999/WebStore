@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebStore.Data.Models.Category>
+﻿@model IEnumerable<WebStore.Web.ViewModels.Categories.DetailsCategoryOutputModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,9 +14,6 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedOn)
@@ -38,9 +35,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedOn)
