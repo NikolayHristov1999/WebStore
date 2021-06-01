@@ -27,9 +27,15 @@
         [Display(Name = "Image Url")]
         public string ImageUrl { get; set; }
 
-        [Display(Name = "Categories")]
-        public string CategoryId { get; set; }
+        [Display(Name = "First Category")]
+        public string FirstCategory { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> Categories { get; set; }
+        [Display(Name = "Second Category")]
+        public string SecondCategory { get; set; }
+
+        [Display(Name = "Third Category")]
+        public string ThirdCategory { get; set; }
+
+        public IEnumerable<KeyValuePair<string, string>> AllCategories { get; set; }
     }
 }

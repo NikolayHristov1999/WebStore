@@ -17,18 +17,15 @@
     
     public class ProductsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly ICategoriesService categoriesService;
         private readonly IProductsService productsService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ProductsController(
-            ApplicationDbContext context,
             ICategoriesService categoriesService,
             IProductsService productsService,
             UserManager<ApplicationUser> userManager)
         {
-            _context = context;
             this.categoriesService = categoriesService;
             this.productsService = productsService;
             this.userManager = userManager;
@@ -66,7 +63,7 @@
         public IActionResult Create()
         {
             var viewModel = new ProductInputModel();
-            viewModel.Categories = this.categoriesService.GetCategoriesAsKeyValuePairs();
+            viewModel.AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs();
             return this.View(viewModel);
         }
 
@@ -100,6 +97,8 @@
             }
 
             var product = this.productsService.GetProductEditModelById((int)id);
+            //var product = this.productsService.GetById<EditProductInputModel>((int)id);
+            //product.AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs();
 
             if (product == null)
             {
@@ -124,7 +123,7 @@
 
             if (!this.ModelState.IsValid)
             {
-                productModel.Categories = this.categoriesService.GetCategoriesAsKeyValuePairs();
+                productModel.AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs();
                 return this.View(productModel);
             }
 
@@ -132,7 +131,6 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
-        // GET: Products/Details/5
         [Authorize]
         public IActionResult Details(int? id)
         {
