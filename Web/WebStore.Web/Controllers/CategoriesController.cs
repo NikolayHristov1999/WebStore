@@ -29,7 +29,6 @@ namespace WebStore.Web.Controllers
             return this.View(this.categoriesService.GetAllRootCategories<CategoryListOutputModel>());
         }
 
-        // GET : Categories/ById/5
         public IActionResult ById(int? id)
         {
             if (id == null)
@@ -46,7 +45,6 @@ namespace WebStore.Web.Controllers
             return this.View(category);
         }
 
-        // GET: Categories
         [Authorize]
         public IActionResult Index()
         {
@@ -54,7 +52,6 @@ namespace WebStore.Web.Controllers
             return this.View(categories);
         }
 
-        // GET: Categories/Details/5
         [Authorize]
         public IActionResult Details(int? id)
         {
@@ -81,9 +78,6 @@ namespace WebStore.Web.Controllers
             return this.View(categoryViewModel);
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -102,7 +96,6 @@ namespace WebStore.Web.Controllers
 
         }
 
-        // GET: Categories/Edit/5
         [Authorize]
         public IActionResult Edit(int? id)
         {
@@ -149,28 +142,25 @@ namespace WebStore.Web.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var category = categoriesService.GetById<EditCategoryInputModel>((int)id);
+
             if (category == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            return View(category);
+            return this.View(category);
         }
 
-        // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            await this.categoriesService.DeleteCategoryById(id);
+            return this.RedirectToAction(nameof(Index));
         }
 
         private bool CategoryExists(int id)

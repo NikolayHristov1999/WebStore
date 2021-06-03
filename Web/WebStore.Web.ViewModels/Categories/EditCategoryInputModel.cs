@@ -8,7 +8,7 @@
     using WebStore.Data.Models;
     using WebStore.Services.Mapping;
 
-    public class EditCategoryInputModel : IMapFrom<Category> 
+    public class EditCategoryInputModel : IMapFrom<Category>
     {
         public int Id { get; set; }
 

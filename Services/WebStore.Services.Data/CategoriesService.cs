@@ -133,6 +133,18 @@
                 .Select(x => new KeyValuePair<string, string>(x.Id.ToString(), x.Name));
         }
 
+        public async Task DeleteCategoryById(int id)
+        {
+            var category = this.categoriesRepository.All().FirstOrDefault(x => x.Id == id);
+
+            if (category != null)
+            {
+                this.categoriesRepository.Delete(category);
+            }
+
+            await this.categoriesRepository.SaveChangesAsync();
+        }
+
         public string GetCategoryName(int id)
         {
             var category = this.GetCategoryById(id);
@@ -144,5 +156,6 @@
             return this.categoriesRepository.AllAsNoTrackingWithDeleted()
                 .FirstOrDefault(x => id == x.Id);
         }
+
     }
 }

@@ -25,5 +25,7 @@
         IEnumerable<T> GetAllRootCategories<T>();
 
         T GetById<T>(int id);
+
+        Task DeleteCategoryById(int id);
     }
 }

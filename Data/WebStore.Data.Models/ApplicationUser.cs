@@ -22,6 +22,12 @@ namespace WebStore.Data.Models
             this.Votes = new HashSet<Vote>();
         }
 
+        public ApplicationUser(string name)
+            :this()
+        {
+            this.UserName = name;
+        }
+
         [DataType("Date")]
         public DateTime? DateOfBirth { get; set; }
 
