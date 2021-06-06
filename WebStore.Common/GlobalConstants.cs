@@ -6,6 +6,8 @@
 
         public const string AdministratorRoleName = "Administrator";
 
+        public const string SellerRoleName = "Seller";
+
         public const string DefaultAdminUserName = "admin@webstore.bg";
     }
 }
