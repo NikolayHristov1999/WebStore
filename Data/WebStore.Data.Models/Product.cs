@@ -27,6 +27,8 @@
         [Required]
         public string ImageUrl { get; set; }
 
+        public int AvailableQuantity { get; set; }
+
         public string AddedByUserId { get; set; }
 
         public ApplicationUser AddedByUser { get; set; }

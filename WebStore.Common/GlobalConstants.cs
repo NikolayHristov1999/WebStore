@@ -9,5 +9,7 @@
         public const string SellerRoleName = "Seller";
 
         public const string DefaultAdminUserName = "admin@webstore.bg";
+
+        public const string NotEnoughQuantity = "Not enough quantity available";
     }
 }
