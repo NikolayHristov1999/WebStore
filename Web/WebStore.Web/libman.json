@@ -58,11 +58,6 @@
         "dist/jquery.validate.unobtrusive.js",
         "dist/jquery.validate.unobtrusive.min.js"
       ]
-    },
-    {
-      "provider": "cdnjs",
-      "library": "bootstrap-select@1.13.18",
-      "destination": "wwwroot/lib/bootstrap-select/"
     }
   ]
 }

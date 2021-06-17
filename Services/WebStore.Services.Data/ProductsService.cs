@@ -41,6 +41,7 @@
                 Price = inputModel.Price,
                 ImageUrl = inputModel.ImageUrl,
                 AddedByUserId = userId,
+                AvailableQuantity = inputModel.Quantity,
             };
 
             await this.productsRepository.AddAsync(product);
@@ -128,6 +129,7 @@
             product.ImageUrl = inputModel.ImageUrl;
             product.IsDeleted = inputModel.IsDeleted;
             product.ModifiedOn = DateTime.UtcNow;
+            product.AvailableQuantity = inputModel.Quantity;
 
             if (product.IsDeleted)
             {
@@ -171,7 +173,7 @@
             await this.productsRepository.SaveChangesAsync();
         }
 
-        private Product GetProductById(int id)
+        public Product GetProductById(int id)
         {
             return this.productsRepository.AllAsNoTrackingWithDeleted()
                 .FirstOrDefault(x => x.Id == id);

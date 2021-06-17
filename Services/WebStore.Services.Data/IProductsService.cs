@@ -21,6 +21,8 @@ namespace WebStore.Services.Data
 
         T GetById<T>(int id);
 
+        Product GetProductById(int id);
+
         Task DeleteProductById(int id);
     }
 }

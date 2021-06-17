@@ -33,6 +33,12 @@
                 <input asp-for="ImageUrl" class="form-control" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="FirstCategory"></label>
                 <select asp-for="FirstCategory" class="form-control" data-live-search="true" asp-items="categoryItems">

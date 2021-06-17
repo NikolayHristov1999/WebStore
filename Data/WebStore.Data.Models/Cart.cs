@@ -1,20 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using WebStore.Data.Common.Models;
-
-namespace WebStore.Data.Models
+﻿namespace WebStore.Data.Models
 {
-    public class Cart : BaseDeletableModel<string>
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Text;
+
+    using WebStore.Data.Common.Models;
+
+    public class Cart : BaseDeletableModel<int>
     {
         public Cart()
         {
-            this.Id = Guid.NewGuid().ToString();
+            this.Items = new HashSet<Item>();
         }
+
+        public bool IsPurchased { get; set; }
+
+        public decimal TotalPrice { get; set; }
 
         public string UserId { get; set; }
 
         public ApplicationUser User { get; set; }
 
-        public IEnumerable<Item> Items { get; set; }
+        public virtual ICollection<Item> Items { get; set; }
     }
 }

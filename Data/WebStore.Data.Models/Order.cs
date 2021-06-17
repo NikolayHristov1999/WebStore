@@ -3,11 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using WebStore.Data.Common.Models;
 
-    public class Order
+    public class Order : BaseDeletableModel<int>
     {
-        public int Id { get; set; }
-
         public int ProductId { get; set; }
 
         public Product Product { get; set; }

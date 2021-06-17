@@ -27,6 +27,9 @@
         [Display(Name = "Image Url")]
         public string ImageUrl { get; set; }
 
+        [Display(Name = "Quantity")]
+        public int Quantity { get; set; }
+
         [Display(Name = "First Category")]
         public string FirstCategory { get; set; }
 

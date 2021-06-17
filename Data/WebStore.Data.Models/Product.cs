@@ -12,6 +12,7 @@
         public Product()
         {
             this.Categories = new HashSet<CategoryProduct>();
+            this.Items = new HashSet<Item>();
         }
 
         [MinLength(3)]
@@ -34,6 +35,8 @@
         public ApplicationUser AddedByUser { get; set; }
 
         public ICollection<CategoryProduct> Categories { get; set; }
+
+        public ICollection<Item> Items { get; set; }
 
     }
 }

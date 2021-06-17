@@ -4,10 +4,10 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Text;
+    using WebStore.Data.Common.Models;
 
-    public class Contact
+    public class Contact : BaseDeletableModel<int>
     {
-        public int Id { get; set; }
 
         [Required]
         [RegularExpression(@"[а-зА-Зa-zA-Z\s]*")]

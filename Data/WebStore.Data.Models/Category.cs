@@ -13,6 +13,7 @@
         public Category()
         {
             this.Products = new HashSet<CategoryProduct>();
+            this.ChildCategories = new HashSet<Category>();
         }
 
         [Required]

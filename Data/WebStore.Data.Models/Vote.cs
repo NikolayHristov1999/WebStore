@@ -1,6 +1,7 @@
 ﻿namespace WebStore.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using WebStore.Data.Common.Models;
 
     public class Vote
     {

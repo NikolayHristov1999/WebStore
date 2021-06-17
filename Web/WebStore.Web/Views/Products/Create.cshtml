@@ -34,11 +34,16 @@
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="FirstCategory"></label>
                 @*<vc:CategoriesDropDown name="CategoryId"></vc:CategoriesDropDown>*@
-            <select asp-for="FirstCategory" class="form-control" asp-items="categoryItems">
-                <option value="">&lt;none&gt;</option>
-            </select>
+                <select asp-for="FirstCategory" class="form-control" asp-items="categoryItems">
+                    <option value="">&lt;none&gt;</option>
+                </select>
                 <span asp-validation-for="FirstCategory" class="text-danger"></span>
             </div>
             <div class="form-group">

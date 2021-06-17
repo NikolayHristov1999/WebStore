@@ -5,41 +5,56 @@
 @inject UserManager<ApplicationUser> UserManager
 
 
-    <ul class="navbar-nav nav-item flex-row">
-        @if (this.SignInManager.IsSignedIn(this.User))
+<ul class="navbar-nav nav-item flex-row">
+    @if (this.SignInManager.IsSignedIn(this.User))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown" asp-area="Identity" asp-page="/Account/Manage/Index" aria-expanded="false">
+                <i class="fas fa-user icons_navbar"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end position-absolute end-0">
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">My Profile</a>
+                </li>
+
+                <li><button class="dropdown-item" type="button">Another action</button></li>
+                <li>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
+                        <button type="submit" class="dropdown-item min" >Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+
+
+
+        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || this.User.IsInRole(GlobalConstants.SellerRoleName))
         {
-            <li class="nav-item dropdown">
-                <a class="nav-link text-white mx-2 dropdown-toggle" asp-area="Identity" asp-page="/Account/Manage/Index" title="Cart">
-                    <!--<i class="fas fa-shopping-cart"></i>-->
-                    <i class="fa icons_navbar">&#xf07a;</i>
-                    <span class='badge badge-warning' id='lblCartCount'> 5 </span>
-                </a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link text-white mx-2 dropdown-toggle" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                    <i class="fas fa-user icons_navbar"></i>
-                </a>
-            </li>
-
-
-
-            if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || this.User.IsInRole(GlobalConstants.SellerRoleName))
-            {
-                <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
-            }
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
-                <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
-            </form>
+            <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
         }
-        else
-        {
+    }
+    else
+    {
 
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt mx-2"></i>Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user mx-2"></i>Sign-Up</a>
-            </li>
-        }
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt mx-2"></i>Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user mx-2"></i>Sign-Up</a>
+        </li>
+    }
 
-    </ul>
+    <li class="nav-item dropdown">
+        <a class="nav-link text-white mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown" title="Cart">
+            <!--<i class="fas fa-shopping-cart"></i>-->
+            <i class="fa icons_navbar">&#xf07a;</i>
+            <span class='badge badge-warning' id='lblCartCount'> 5 </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end position-absolute end-0">
+            <li><button class="dropdown-item" type="button">Action</button></li>
+            <li><button class="dropdown-item" type="button">Another action</button></li>
+            <li><button class="dropdown-item" type="button">Something else here</button></li>
+        </ul>
+    </li>
+
+</ul>

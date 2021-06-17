@@ -203,3 +203,8 @@ body {
 .icons_navbar{
     font-size:18px;
 }
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
