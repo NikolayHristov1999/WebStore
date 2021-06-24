@@ -1,19 +1,43 @@
 ﻿
-@model WebStore.Web.ViewModels.ShoppingCart.ItemInCartOutputModel
+@model WebStore.Web.ViewModels.ShoppingCart.ItemInCartViewModel
 
 <div class="modal fade" id="addedItemToCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">You Just Added Item To Your Cart</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img src="@Model.ProductImageUrl" />
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-6">
+                            <img src="@Model.ProductImageUrl" class="img-fluid img-in-item-contrainer img-max-height-added-to-cart"/>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-break">
+                                @Model.ProductName
+                            </div>
+                            <hr />
+                            <div class="text-info">
+                                Product Price - $@Model.ProductPrice
+                            </div>
+                            <div class="text-muted">
+                                Quantity - @Model.Quantity
+                            </div>
+                            <hr />
+                            <div class="h2 text-warning">
+                                Total Price - $@Model.ItemTotalPrice
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary text-uppercase" data-bs-dismiss="modal">Continue Shopping</button>
-                <button type="button" class="btn btn-primary text-uppercase">Go to cart</button>
+                <a href="/ShoppingCart/Checkout" class="btn btn-primary text-uppercase">
+                    Checkout
+                </a>
             </div>
         </div>
     </div>

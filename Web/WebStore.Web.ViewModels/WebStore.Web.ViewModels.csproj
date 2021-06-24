@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\WebStore.Data.Models\WebStore.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\WebStore.Services.Mapping\WebStore.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\WebStore.Common\WebStore.Common.csproj" />
   </ItemGroup>
 
 </Project>

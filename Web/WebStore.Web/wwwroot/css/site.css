@@ -75,7 +75,7 @@ body {
 
 
 body {
-    background-color: #eee
+    background-color: #f8f9fa
 }
 
 .t-products {
@@ -116,14 +116,6 @@ body {
     background-color: #5629c0;
     height: 38px
 }
-
-    .cart-button button:focus,
-    button:active {
-        font-size: 12px;
-        color: #fff;
-        background-color: #5629c0;
-        box-shadow: none
-    }
 
 .product_fav i {
     line-height: 40px;
@@ -208,3 +200,24 @@ body {
     display: block;
     margin-top: 0;
 }
+
+
+.img-max-height-added-to-cart{
+    max-height: 400px;
+}
+
+.img-max-height-item-in-cart {
+    max-height: 150px;
+}
+
+.img-height-img-in-cart{
+    height: 150px;
+}
+
+#cartItems .modal-dialog {
+    position: fixed;
+    margin: auto;
+    right: 0px;
+}
+
+

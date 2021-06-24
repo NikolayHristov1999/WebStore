@@ -8,23 +8,28 @@
 
     public class Contact : BaseDeletableModel<int>
     {
+        [Required]
+        public string FirstName { get; set; }
 
         [Required]
-        [RegularExpression(@"[а-зА-Зa-zA-Z\s]*")]
-        public string Name { get; set; }
-
-        [Required]
-        public string Address { get; set; }
-
-        [Required]
-        [RegularExpression(@"[А-За-зa-zA-Z\s]*")]
-        public string City { get; set; }
-
-        public string Zip { get; set; }
+        public string LastName { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [Required]
+        public string Street { get; set; }
+
+        public string Address { get; set; }
+
+        [Required]
+        public string Country { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        public string Zip { get; set; }
 
         public string UserId { get; set; }
 

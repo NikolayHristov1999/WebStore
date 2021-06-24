@@ -1,0 +1,92 @@
+﻿@model WebStore.Web.ViewModels.ShoppingCart.CheckoutInputModel
+<div class="row g-5">
+    <div class="col-lg-4 col-md-5 order-md-last">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Your cart</span>
+            <span class="badge bg-primary rounded-pill">3</span>
+        </h4>
+
+        <partial name="_ShoppingCartItemsPartial" model="Model.CartItems" />
+        
+    </div>
+    <div class="col-lg-8 col-md-7">
+        <h4 class="mb-3">Billing information</h4>
+        <form asp-action="Checkout">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <label asp-for="Contact.FirstName" class="control-label"></label>
+                    <input asp-for="Contact.FirstName" class="form-control" />
+                    <span asp-validation-for="Contact.FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="Contact.LastName" class="control-label"></label>
+                    <input asp-for="Contact.LastName" class="form-control" />
+                    <span asp-validation-for="Contact.LastName" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Contact.Email" class="control-label"></label>
+                    <input asp-for="Contact.Email" class="form-control" />
+                    <span asp-validation-for="Contact.Email" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Contact.Street" class="control-label"></label>
+                    <input asp-for="Contact.Street" class="form-control" />
+                    <span asp-validation-for="Contact.Street" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Contact.Address" class="control-label"></label>
+                    <input asp-for="Contact.Address" class="form-control" />
+                    <span asp-validation-for="Contact.Address" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-5">
+                    <label asp-for="Contact.Country" class="control-label"></label>
+                    <input asp-for="Contact.Country" class="form-control" />
+                    <span asp-validation-for="Contact.Country" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Contact.City" class="control-label"></label>
+                    <input asp-for="Contact.City" class="form-control" />
+                    <span asp-validation-for="Contact.City" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="Contact.Zip" class="control-label"></label>
+                    <input asp-for="Contact.Zip" class="form-control" />
+                    <span asp-validation-for="Contact.Zip" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ShippingMethod"></label>
+                <select asp-for="ShippingMethod" class="form-control">
+                    <option value="DHL">DHL</option>
+                    <option value="DHL">Econt</option>
+                </select>
+                <span asp-validation-for="ShippingMethod" class="text-danger"></span>
+            </div>
+
+            <hr class="my-4">
+
+            <h4 class="mb-3">Payment</h4>
+
+            <div class="my-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" value="Credit" />Credit<br />
+                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" value="Debit" />Debit<br />
+                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" value="PayPal" />PayPal<br />
+                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" value="OnShip" />On Ship<br />
+                </div>
+            </div>
+
+
+            <hr class="my-4">
+
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+        </form>
+    </div>
+</div>

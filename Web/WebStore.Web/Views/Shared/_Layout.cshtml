@@ -22,10 +22,6 @@
                 </button>
 
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">@GlobalConstants.SystemName</a>
-                <div class="d-lg-none align-content-sm-end">
-
-                    <partial name="_LoginPartial" />
-                </div>
 
                 <div class="collapse navbar-collapse" id="navbarScroll">
                     <ul class="navbar-nav me-auto my-2 my-lg-0">
@@ -42,52 +38,18 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
                         </li>
                     </ul>
-                    <form class="d-flex">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <form class="d-flex" asp-controller="Products" asp-action="All" method="get">
+                        <input class="form-control" type="search" placeholder="Search" name="search" aria-label="Search" />
                         <button class="btn btn-outline-light mx-2" type="submit"><i class="fas fa-search"></i></button>
                     </form>
-                    <div class="d-none d-lg-block">
-                        <partial name="_LoginPartial" />
-                    </div>
                 </div>
+                <div class="align-content-end">
+                    <partial name="_LoginPartial" />
+                </div>
+
             </div>
         </nav>
     </header>
-    
-    @*<header>
-        <nav class="navbar navbar-expand-sm bg-dark text-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">@GlobalConstants.SystemName</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                        <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-                    </form>
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Products" asp-action="All">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>*@
 
     <div class="container">
         <partial name="_CookieConsentPartial" />

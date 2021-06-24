@@ -1,8 +1,20 @@
 ﻿@using WebStore.Common
 @using WebStore.Data.Models
+@using WebStore.Services.Data
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IShoppingCartService shoppingCartService
+@inject IHttpContextAccessor HttpContextAccessor
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContext
+
+@{
+    var cartId = this.httpContext.HttpContext.Session.GetInt32(nameof(Cart));
+    var cartItemsCount = cartId != null ? this.shoppingCartService.GetCartItemsCount((int)cartId) : 0;
+    var test = 2;
+}
 
 
 <ul class="navbar-nav nav-item flex-row">
@@ -20,7 +32,7 @@
                 <li><button class="dropdown-item" type="button">Another action</button></li>
                 <li>
                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
-                        <button type="submit" class="dropdown-item min" >Logout</button>
+                        <button type="submit" class="dropdown-item min">Logout</button>
                     </form>
                 </li>
             </ul>
@@ -45,16 +57,11 @@
     }
 
     <li class="nav-item dropdown">
-        <a class="nav-link text-white mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown" title="Cart">
+        <a class="nav-link text-white mx-2 dropdown-toggle" role="button" onclick="getCartItems()" data-bs-toggle="dropdown" title="Cart">
             <!--<i class="fas fa-shopping-cart"></i>-->
             <i class="fa icons_navbar">&#xf07a;</i>
-            <span class='badge badge-warning' id='lblCartCount'> 5 </span>
+            <span class='badge badge-warning' id='lblCartCount'> @cartItemsCount </span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end position-absolute end-0">
-            <li><button class="dropdown-item" type="button">Action</button></li>
-            <li><button class="dropdown-item" type="button">Another action</button></li>
-            <li><button class="dropdown-item" type="button">Something else here</button></li>
-        </ul>
     </li>
 
 </ul>

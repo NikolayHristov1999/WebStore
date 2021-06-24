@@ -32,9 +32,16 @@
         }
 
         // GET: Products
-        public IActionResult All()
+        public IActionResult All(string search)
         {
-            return this.View(this.productsService.GetAll<ListProductOutputModel>());
+            var products = this.productsService.GetAll<ListProductOutputModel>();
+
+            if (search != null)
+            {
+                products = products.Where(x => x.Name.Contains(search, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            return this.View(products);
         }
 
         public IActionResult ById(int? id)
