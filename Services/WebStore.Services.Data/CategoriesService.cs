@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
     using WebStore.Services.Mapping;
@@ -149,6 +150,26 @@
         {
             var category = this.GetCategoryById(id);
             return category.Name;
+        }
+
+        public IEnumerable<CategorySidebarViewModel> GetAllMainCategoriesInfo()
+        {
+            var model = new List<CategorySidebarViewModel>();
+            var rootCategories = this.categoriesRepository.All()
+                .Where(x => x.ParentCategoryId == null);
+
+            foreach (var category in rootCategories)
+            {
+                var mainCategory = AutoMapperConfig.MapperInstance.Map<CategorySidebarViewModel>(category);
+                mainCategory.SubCategories = this.categoriesRepository.All()
+                    .Where(x => x.ParentCategoryId == category.Id)
+                    .To<BaseCategoryViewModel>()
+                    .ToList();
+
+                model.Add(mainCategory);
+            }
+
+            return model;
         }
 
         private Category GetCategoryById(int id)

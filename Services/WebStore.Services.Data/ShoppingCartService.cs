@@ -162,6 +162,13 @@
             await this.orderRepository.AddAsync(order);
             await this.orderRepository.SaveChangesAsync();
 
+            this.itemRepository.All()
+                .Where(x => x.CartId == cartId)
+                .ToList()
+                .ForEach(x => x.IsPurchased = true);
+
+            await this.itemRepository.SaveChangesAsync();
+
             return true;
         }
 

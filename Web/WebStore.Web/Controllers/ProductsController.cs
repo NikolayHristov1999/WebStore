@@ -74,9 +74,6 @@
             return this.View(viewModel);
         }
 
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -90,7 +87,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             await this.productsService.CreateAsync(inputModel, user.Id);
 
-            this.TempData["Message"] = "Category added successfully.";
+            this.TempData["Message"] = "Product added successfully.";
             return this.RedirectToAction(nameof(this.Index));
         }
 

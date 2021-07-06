@@ -1,4 +1,4 @@
-﻿namespace WebStore.Web.Controllers
+﻿ namespace WebStore.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -85,6 +85,18 @@
             {
                 success = true,
                 cartItemsCount = this.shoppingCartService.GetCartItemsCount(cartId),
+            });
+        }
+
+        public async Task<IActionResult> ClearCart()
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+            var cartId = await this.shoppingCartService.CreateCartAsync(user != null ? user.Id : null);
+            this.HttpContext.Session.SetInt32(nameof(Cart), cartId);
+
+            return this.Json(new
+            {
+                success = true,
             });
         }
 

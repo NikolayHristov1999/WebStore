@@ -10,7 +10,7 @@
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.Product;
 
-    public class SingleCategoryOutputModel : BaseCategoryOutputModel, IMapFrom<Category>, IHaveCustomMappings
+    public class SingleCategoryOutputModel : BaseCategoryViewModel, IMapFrom<Category>, IHaveCustomMappings
     {
         public string ImageUrl { get; set; }
 

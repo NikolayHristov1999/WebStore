@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Http;
 
     public class ProductInputModel
     {
@@ -30,6 +31,9 @@
         [Display(Name = "Quantity")]
         public int Quantity { get; set; }
 
+        [Display(Name = "Main Image")]
+        public IFormFile MainImage { get; set; }
+
         [Display(Name = "First Category")]
         public string FirstCategory { get; set; }
 
@@ -41,4 +45,5 @@
 
         public IEnumerable<KeyValuePair<string, string>> AllCategories { get; set; }
     }
+
 }

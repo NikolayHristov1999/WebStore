@@ -26,6 +26,8 @@
 
         T GetById<T>(int id);
 
+        IEnumerable<CategorySidebarViewModel> GetAllMainCategoriesInfo();
+
         Task DeleteCategoryById(int id);
     }
 }

@@ -6,7 +6,7 @@
     using WebStore.Data.Models;
     using WebStore.Services.Mapping;
 
-    public class DetailsCategoryOutputModel : BaseCategoryOutputModel, IMapFrom<Category>, IHaveCustomMappings
+    public class DetailsCategoryOutputModel : BaseCategoryViewModel, IMapFrom<Category>, IHaveCustomMappings
     {
         [Display(Name = "Image")]
         public string ImageUrl { get; set; }

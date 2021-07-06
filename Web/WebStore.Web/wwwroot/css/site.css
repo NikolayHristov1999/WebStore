@@ -221,3 +221,10 @@ body {
 }
 
 
+.main-img-height-in-product{
+    height: 450px;
+}
+
+.checked-star {
+    color: orange;
+}

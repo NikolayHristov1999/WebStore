@@ -21,6 +21,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+
     using System;
 
     public class Startup
@@ -78,6 +79,7 @@
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<ICategoriesProductsService, CategoriesProductsService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
+            services.AddTransient<IImageProcessing, ImageProcessing>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,13 +1,15 @@
 ﻿@model WebStore.Web.ViewModels.ShoppingCart.CheckoutInputModel
+
+<partial name="_EmptyCartWarning" />
 <div class="row g-5">
     <div class="col-lg-4 col-md-5 order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-primary">Your cart</span>
-            <span class="badge bg-primary rounded-pill">3</span>
+            <span class="badge bg-primary rounded-pill" id="checkoutCartItemsCount">@Model.CartItems.Items.Count()</span>
         </h4>
 
         <partial name="_ShoppingCartItemsPartial" model="Model.CartItems" />
-        
+
     </div>
     <div class="col-lg-8 col-md-7">
         <h4 class="mb-3">Billing information</h4>
@@ -90,3 +92,16 @@
         </form>
     </div>
 </div>
+@if (Model == null || Model.CartItems == null || Model.CartItems.Items.Count() == 0)
+{
+    @section Scripts{
+
+        {
+        <script>
+            window.onload = function () {
+                $('#staticModalForEmptyCart').modal('show');
+            };
+        </script>
+        }
+    }
+}

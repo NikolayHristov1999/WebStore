@@ -1,6 +1,6 @@
 ﻿@model WebStore.Web.ViewModels.ShoppingCart.ItemInCartListViewModel
 
-@if (Model.Items.Count() == 0)
+@if (Model == null || Model.Items.Count() == 0)
 {
     <div class="row px-2">
         Your cart is empty
@@ -43,9 +43,11 @@ else
                     <div class="text-info">
                         Price - $@item.ItemTotalPrice
                     </div>
-                    <button class="btn btn-danger text-end" onclick="removeCartItem('@item.Id')">
-                        Remove
-                    </button>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-danger text-end justify-content-end" onclick="removeCartItem('@item.Id')">
+                            Remove
+                        </button>
+                    </div>
                 </div>
             </div>
             <hr />

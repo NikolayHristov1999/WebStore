@@ -14,22 +14,26 @@
     public class ProductsService : IProductsService
     {
         private const int MaximumCategoriesPerProduct = 3;
+        private const string ImagePath = "products";
 
         private readonly IDeletableEntityRepository<Product> productsRepository;
         private readonly IRepository<CategoryProduct> categoryProductRepository;
         private readonly ICategoriesService categoriesService;
         private readonly ICategoriesProductsService categoriesProductsService;
+        private readonly IImageProcessing imageProcessing;
 
         public ProductsService (
             IDeletableEntityRepository<Product> productRepository,
             IRepository<CategoryProduct> categoryProductRepository,
             ICategoriesService categoriesService,
-            ICategoriesProductsService categoriesProductsService)
+            ICategoriesProductsService categoriesProductsService,
+            IImageProcessing imageProcessing)
         {
             this.productsRepository = productRepository;
             this.categoryProductRepository = categoryProductRepository;
             this.categoriesService = categoriesService;
             this.categoriesProductsService = categoriesProductsService;
+            this.imageProcessing = imageProcessing;
         }
 
         public async Task CreateAsync(ProductInputModel inputModel, string userId)
@@ -44,8 +48,12 @@
                 AvailableQuantity = inputModel.Quantity,
             };
 
+
             await this.productsRepository.AddAsync(product);
             await this.productsRepository.SaveChangesAsync();
+
+
+            await this.imageProcessing.UploadImageAsync(inputModel.MainImage, ImagePath + "/" + product.Id);
 
             var isValidated = int.TryParse(inputModel.FirstCategory, out int categoryId);
             if (isValidated && this.categoriesService.GetCategoryName(categoryId) != null)

@@ -13,7 +13,6 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            
         }
     }
 }
