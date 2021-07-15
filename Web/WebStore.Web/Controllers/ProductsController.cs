@@ -12,6 +12,7 @@
     using WebStore.Data;
     using WebStore.Data.Models;
     using WebStore.Services.Data;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Product;
 
     

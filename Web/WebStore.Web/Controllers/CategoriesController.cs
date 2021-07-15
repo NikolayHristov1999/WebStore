@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using WebStore.Data;
-using WebStore.Data.Models;
-using WebStore.Services.Data;
-using WebStore.Web.ViewModels.Categories;
-
-namespace WebStore.Web.Controllers
+﻿namespace WebStore.Web.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using WebStore.Data;
+    using WebStore.Data.Models;
+    using WebStore.Services.Data;
+    using WebStore.Services.Data.Contracts;
+    using WebStore.Web.ViewModels.Categories;
+
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

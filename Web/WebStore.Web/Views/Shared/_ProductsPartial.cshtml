@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<WebStore.Web.ViewModels.Product.ListProductOutputModel>
-@inject WebStore.Services.Data.ICategoriesService categoriesService
+@inject WebStore.Services.Data.Contracts.ICategoriesService categoriesService
 @{
     var categories = categoriesService.GetAllMainCategoriesInfo();
 }

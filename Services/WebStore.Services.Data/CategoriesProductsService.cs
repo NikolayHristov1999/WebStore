@@ -5,8 +5,10 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
+    using WebStore.Services.Data.Contracts;
 
     public class CategoriesProductsService : ICategoriesProductsService
     {

@@ -1,6 +1,6 @@
 ﻿@using WebStore.Common
 @using WebStore.Data.Models
-@using WebStore.Services.Data
+@using WebStore.Services.Data.Contracts
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Http
 
@@ -11,57 +11,65 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContext
 
 @{
-    var cartId = this.httpContext.HttpContext.Session.GetInt32(nameof(Cart));
-    var cartItemsCount = cartId != null ? this.shoppingCartService.GetCartItemsCount((int)cartId) : 0;
-    var test = 2;
+    var cartId = this.httpContext.HttpContext.Session.GetString(nameof(Cart));
+    var cartItemsCount = cartId != null ? this.shoppingCartService.GetCartItemsCount(cartId) : 0;
 }
 
 
-<ul class="navbar-nav nav-item flex-row">
-    @if (this.SignInManager.IsSignedIn(this.User))
+@if (this.SignInManager.IsSignedIn(this.User))
+{
+    @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || this.User.IsInRole(GlobalConstants.SellerRoleName))
     {
         <li class="nav-item dropdown">
-            <a class="nav-link text-white mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown" asp-area="Identity" asp-page="/Account/Manage/Index" aria-expanded="false">
-                <i class="fas fa-user icons_navbar"></i>
+            <a class="nav-link text-white mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Dashboard">
+                <i class="fas fa-tachometer-alt icons_navbar"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end position-absolute end-0">
                 <li>
-                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">My Profile</a>
+                    <a class="dropdown-item" asp-area="Administration" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                 </li>
-
-                <li><button class="dropdown-item" type="button">Another action</button></li>
                 <li>
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
-                        <button type="submit" class="dropdown-item min">Logout</button>
-                    </form>
+                    <a class="dropdown-item" asp-area="Administration" asp-controller="Dashboard" asp-action="Index">Product Administration</a>
                 </li>
             </ul>
         </li>
-
-
-
-        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || this.User.IsInRole(GlobalConstants.SellerRoleName))
-        {
-            <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
-        }
-    }
-    else
-    {
-
-        <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt mx-2"></i>Login</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user mx-2"></i>Sign-Up</a>
-        </li>
-    }
-
+     }
     <li class="nav-item dropdown">
-        <a class="nav-link text-white mx-2 dropdown-toggle" role="button" onclick="getCartItems()" data-bs-toggle="dropdown" title="Cart">
-            <!--<i class="fas fa-shopping-cart"></i>-->
-            <i class="fa icons_navbar">&#xf07a;</i>
-            <span class='badge badge-warning' id='lblCartCount'> @cartItemsCount </span>
-        </a>
-    </li>
 
-</ul>
+        <a class="nav-link text-white mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown" asp-area="Identity" asp-page="/Account/Manage/Index" aria-expanded="false">
+            <i class="fas fa-user icons_navbar"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end position-absolute end-0">
+            <li>
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">My Profile</a>
+            </li>
+
+            <li><button class="dropdown-item" type="button">Another action</button></li>
+            <li>
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
+                    <button type="submit" class="dropdown-item min">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt mx-2"></i>Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user mx-2"></i>Sign-Up</a>
+    </li>
+}
+
+<li class="nav-item dropdown">
+    <a class="nav-link text-white mx-2 dropdown-toggle" role="button" onclick="getCartItems()" data-bs-toggle="dropdown" title="Cart">
+        <!--<i class="fas fa-shopping-cart"></i>-->
+        <i class="fa icons_navbar">&#xf07a;</i>
+        <span class='badge badge-warning lblCartCount'> @cartItemsCount </span>
+    </a>
+</li>
+
+

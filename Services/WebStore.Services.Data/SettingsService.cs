@@ -5,6 +5,7 @@
 
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
 
     public class SettingsService : ISettingsService

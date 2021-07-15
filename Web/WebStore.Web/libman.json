@@ -41,7 +41,8 @@
         "dist/css/bootstrap.min.css",
         "dist/js/bootstrap.js",
         "dist/js/bootstrap.min.js",
-        "dist/js/bootstrap.bundle.min.js"      ]
+        "dist/js/bootstrap.bundle.min.js"
+      ]
     },
     {
       "library": "jquery-validation@1.19.2",
@@ -58,6 +59,16 @@
         "dist/jquery.validate.unobtrusive.js",
         "dist/jquery.validate.unobtrusive.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "datatables.net@1.10.24",
+      "destination": "wwwroot/lib/datatables.net/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "Chart.js@3.4.1",
+      "destination": "wwwroot/lib/Chart.js/"
     }
   ]
 }

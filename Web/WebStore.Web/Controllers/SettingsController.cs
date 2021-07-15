@@ -9,6 +9,7 @@
     using WebStore.Web.ViewModels.Settings;
 
     using Microsoft.AspNetCore.Mvc;
+    using WebStore.Services.Data.Contracts;
 
     public class SettingsController : BaseController
     {

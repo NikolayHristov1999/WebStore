@@ -8,6 +8,7 @@
 
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.Categories;
     using WebStore.Web.ViewModels.Product;

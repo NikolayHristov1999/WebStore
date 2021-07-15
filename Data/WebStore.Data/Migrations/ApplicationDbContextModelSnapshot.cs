@@ -248,10 +248,8 @@ namespace WebStore.Data.Migrations
 
             modelBuilder.Entity("WebStore.Data.Models.Cart", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -260,9 +258,6 @@ namespace WebStore.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPurchased")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedOn")
@@ -280,7 +275,7 @@ namespace WebStore.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Cart");
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Category", b =>
@@ -402,13 +397,44 @@ namespace WebStore.Data.Migrations
                     b.ToTable("Contacts");
                 });
 
+            modelBuilder.Entity("WebStore.Data.Models.Image", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AddedByUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AltTagName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Extension")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddedByUserId");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("WebStore.Data.Models.Item", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CartId")
-                        .HasColumnType("int");
+                    b.Property<string>("CartId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -417,9 +443,6 @@ namespace WebStore.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPurchased")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("ItemTotalPrice")
@@ -434,6 +457,9 @@ namespace WebStore.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("SellerOrderId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
@@ -442,18 +468,19 @@ namespace WebStore.Data.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("SellerOrderId");
+
                     b.ToTable("Item");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
+                    b.Property<string>("CartId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ContactId")
                         .HasColumnType("int");
@@ -483,7 +510,8 @@ namespace WebStore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
+                    b.HasIndex("CartId")
+                        .IsUnique();
 
                     b.HasIndex("ContactId");
 
@@ -541,6 +569,56 @@ namespace WebStore.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("WebStore.Data.Models.SellerOrder", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BuyerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SellerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ShippingMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("SellerOrder");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Setting", b =>
@@ -690,6 +768,15 @@ namespace WebStore.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebStore.Data.Models.Image", b =>
+                {
+                    b.HasOne("WebStore.Data.Models.ApplicationUser", "AddedByUser")
+                        .WithMany()
+                        .HasForeignKey("AddedByUserId");
+
+                    b.Navigation("AddedByUser");
+                });
+
             modelBuilder.Entity("WebStore.Data.Models.Item", b =>
                 {
                     b.HasOne("WebStore.Data.Models.Cart", "Cart")
@@ -702,16 +789,22 @@ namespace WebStore.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("WebStore.Data.Models.SellerOrder", "SellerOrder")
+                        .WithMany("Items")
+                        .HasForeignKey("SellerOrderId");
+
                     b.Navigation("Cart");
 
                     b.Navigation("Product");
+
+                    b.Navigation("SellerOrder");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Order", b =>
                 {
                     b.HasOne("WebStore.Data.Models.Cart", "Cart")
-                        .WithMany()
-                        .HasForeignKey("CartId")
+                        .WithOne("Order")
+                        .HasForeignKey("WebStore.Data.Models.Order", "CartId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -739,6 +832,29 @@ namespace WebStore.Data.Migrations
                         .HasForeignKey("AddedByUserId");
 
                     b.Navigation("AddedByUser");
+                });
+
+            modelBuilder.Entity("WebStore.Data.Models.SellerOrder", b =>
+                {
+                    b.HasOne("WebStore.Data.Models.ApplicationUser", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId");
+
+                    b.HasOne("WebStore.Data.Models.Contact", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebStore.Data.Models.ApplicationUser", "Seller")
+                        .WithMany()
+                        .HasForeignKey("SellerId");
+
+                    b.Navigation("Buyer");
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Vote", b =>
@@ -782,6 +898,8 @@ namespace WebStore.Data.Migrations
             modelBuilder.Entity("WebStore.Data.Models.Cart", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Category", b =>
@@ -795,6 +913,11 @@ namespace WebStore.Data.Migrations
                 {
                     b.Navigation("Categories");
 
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("WebStore.Data.Models.SellerOrder", b =>
+                {
                     b.Navigation("Items");
                 });
 #pragma warning restore 612, 618

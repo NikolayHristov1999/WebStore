@@ -61,7 +61,10 @@ function renewCartItemCount() {
         dataType: "text",
         success: function (data) {
             var obj = JSON.parse(data);
-            document.getElementById("lblCartCount").innerText = obj.cartItemsCount;
+            var items = document.getElementsByClassName("lblCartCount");
+            for (var i = 0; i < items.length; i++) {
+                items[i].innerText = obj.cartItemsCount;
+            }
             if (document.contains(document.getElementById("checkoutCartItemsCount"))) {
                 if (obj.cartItemsCount == 0) {
                     $('#staticModalForEmptyCart').modal('show');

@@ -10,6 +10,7 @@
     using WebStore.Common;
     using WebStore.Data.Models;
     using WebStore.Services.Data;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.ShoppingCart;
 
 
@@ -92,7 +93,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
             var cartId = await this.shoppingCartService.CreateCartAsync(user != null ? user.Id : null);
-            this.HttpContext.Session.SetInt32(nameof(Cart), cartId);
+            this.HttpContext.Session.SetString(nameof(Cart), cartId);
 
             return this.Json(new
             {
@@ -148,22 +149,22 @@
             }
 
             cartId = await this.shoppingCartService.CreateCartAsync(user != null ? user.Id : null);
-            this.HttpContext.Session.SetInt32(nameof(Cart), (int)cartId);
+            this.HttpContext.Session.SetString(nameof(Cart), cartId);
             return this.Redirect("/products/all");
         }
 
-        private async Task<int> GetUserCartId()
+        private async Task<string> GetUserCartId()
         {
-            var cartId = this.HttpContext.Session.GetInt32(nameof(Cart));
+            var cartId = this.HttpContext.Session.GetString(nameof(Cart));
 
             if (cartId == null)
             {
                 var user = await this.userManager.GetUserAsync(this.User);
                 cartId = await this.shoppingCartService.CreateCartAsync(user != null ? user.Id : null);
-                this.HttpContext.Session.SetInt32(nameof(Cart), (int)cartId);
+                this.HttpContext.Session.SetString(nameof(Cart), cartId);
             }
 
-            return (int)cartId;
+            return cartId;
         }
     }
 }

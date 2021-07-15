@@ -32,11 +32,17 @@
 
         public DbSet<CategoryProduct> CategoriesProducts { get; set; }
 
-        public DbSet<Order> Orders { get; set; }
-
         public DbSet<Vote> Votes { get; set; }
 
         public DbSet<Contact> Contacts { get; set; }
+
+        public DbSet<Cart> Carts { get; set; }
+
+        public DbSet<SellerOrder> SellerOrder { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Image> Images { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -59,6 +65,7 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             builder.Entity<CategoryProduct>()
                 .HasKey(x => new { x.ProductId, x.CategoryId });
 

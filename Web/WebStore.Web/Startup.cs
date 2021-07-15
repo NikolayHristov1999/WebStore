@@ -1,6 +1,7 @@
 ﻿namespace WebStore.Web
 {
     using System.Reflection;
+    using System;
 
     using WebStore.Data;
     using WebStore.Data.Common;
@@ -9,6 +10,7 @@
     using WebStore.Data.Repositories;
     using WebStore.Data.Seeding;
     using WebStore.Services.Data;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
     using WebStore.Services.Messaging;
     using WebStore.Web.ViewModels;
@@ -21,8 +23,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-
-    using System;
 
     public class Startup
     {
@@ -74,12 +74,14 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
-
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<ICategoriesProductsService, CategoriesProductsService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
-            services.AddTransient<IImageProcessing, ImageProcessing>();
+            services.AddTransient<IImageProcessingService, ImageProcessingService>();
+            services.AddTransient<ISalesmanService, SalesmanService>();
+            services.AddTransient<IContactService, ContactService>();
+            services.AddTransient<IOrdersService, OrdersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

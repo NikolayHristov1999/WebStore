@@ -4,8 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using WebStore.Data;
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.ShoppingCart;
 
@@ -14,24 +17,28 @@
         private readonly IDeletableEntityRepository<Item> itemRepository;
         private readonly IDeletableEntityRepository<Cart> cartRepository;
         private readonly IDeletableEntityRepository<Order> orderRepository;
+        private readonly IDeletableEntityRepository<SellerOrder> sellerOrderRepository;
         private readonly IProductsService productsService;
 
         public ShoppingCartService(
             IDeletableEntityRepository<Item> itemRepository,
             IDeletableEntityRepository<Cart> cartRepository,
             IDeletableEntityRepository<Order> orderRepository,
+            IDeletableEntityRepository<SellerOrder> sellerOrderRepository,
             IProductsService productsService)
         {
             this.itemRepository = itemRepository;
             this.cartRepository = cartRepository;
             this.productsService = productsService;
             this.orderRepository = orderRepository;
+            this.sellerOrderRepository = sellerOrderRepository;
         }
 
-        public async Task<T> AddToCartAsync<T>(int cartId, int productId, int quantity)
+        public async Task<T> AddToCartAsync<T>(string cartId, int productId, int quantity)
             where T : class
         {
             var product = this.productsService.GetProductById(productId);
+
             if (product == null)
             {
                 return null;
@@ -47,7 +54,6 @@
                 {
                     ProductId = productId,
                     Quantity = quantity,
-                    IsPurchased = false,
                     CartId = cartId,
                     ItemTotalPrice = product.Price * quantity,
                 };
@@ -86,7 +92,7 @@
             return true;
         }
 
-        public async Task AddItemToCartAsync(int cartId, Item item)
+        public async Task AddItemToCartAsync(string cartId, Item item)
         {
             var cart = this.cartRepository.All().FirstOrDefault(x => x.Id == cartId);
             cart.TotalPrice += item.ItemTotalPrice;
@@ -95,12 +101,12 @@
             await this.cartRepository.SaveChangesAsync();
         }
 
-        public TCart GetCartById<TCart>(int id)
+        public TCart GetCartById<TCart>(string id)
             => this.cartRepository.All()
             .Where(x => x.Id == id)
             .To<TCart>().FirstOrDefault();
 
-        public async Task<int> CreateCartAsync(string userId = null)
+        public async Task<string> CreateCartAsync(string userId = null)
         {
             var cart = new Cart();
 
@@ -115,7 +121,7 @@
             return cart.Id;
         }
 
-        public IEnumerable<T> GetAllItemsForCartId<T>(int cartId)
+        public IEnumerable<T> GetAllItemsForCartId<T>(string cartId)
         {
             return this.itemRepository.AllAsNoTracking()
                 .Where(x => x.CartId == cartId)
@@ -123,7 +129,7 @@
                 .ToList();
         }
 
-        public int GetCartItemsCount(int cartId)
+        public int GetCartItemsCount(string cartId)
         {
             return this.itemRepository.All()
                 .Where(x => x.CartId == cartId)
@@ -131,7 +137,7 @@
 
         }
 
-        public async Task<bool> RemoveItemFromCartAsync(string itemId, int cartId)
+        public async Task<bool> RemoveItemFromCartAsync(string itemId, string cartId)
         {
             var item = this.itemRepository.All()
                 .FirstOrDefault(x => x.Id == itemId && x.CartId == cartId);
@@ -149,8 +155,9 @@
 
         }
 
-        public async Task<bool> CreateOrderAsync(CheckoutInputModel model, int cartId, string userId = null)
+        public async Task<bool> CreateOrderAsync(CheckoutInputModel model, string cartId, string userId = null)
         {
+            var sellerOrders = new Dictionary<string, SellerOrder>();
             var order = AutoMapperConfig.MapperInstance.Map<Order>(model);
             order.CartId = cartId;
 
@@ -162,17 +169,42 @@
             await this.orderRepository.AddAsync(order);
             await this.orderRepository.SaveChangesAsync();
 
-            this.itemRepository.All()
+            var items = this.itemRepository.All()
                 .Where(x => x.CartId == cartId)
-                .ToList()
-                .ForEach(x => x.IsPurchased = true);
+                .ToList();
 
+            foreach (var item in items)
+            {
+                var seller = this.productsService.GetProductById(item.ProductId).AddedByUserId;
+                if (!sellerOrders.ContainsKey(seller))
+                {
+                    var sellerOrderTmp = new SellerOrder
+                    {
+                        SellerId = seller,
+                        BuyerId = order.UserId,
+                        PaymentMethod = order.PaymentMethod,
+                        ShippingMethod = order.ShippingMethod,
+                        ContactId = order.ContactId,
+                    };
+                    sellerOrders[seller] = sellerOrderTmp;
+                }
+
+                item.SellerOrderId = sellerOrders[seller].Id;
+                sellerOrders[seller].TotalPrice += item.ItemTotalPrice;
+            }
+
+            foreach (var sellerOrder in sellerOrders)
+            {
+                await this.sellerOrderRepository.AddAsync(sellerOrder.Value);
+            }
+
+            await this.sellerOrderRepository.SaveChangesAsync();
             await this.itemRepository.SaveChangesAsync();
 
             return true;
         }
 
-        private Cart GetCartById(int cartId)
+        private Cart GetCartById(string cartId)
         {
             return this.cartRepository.All()
                 .Where(x => x.Id == cartId)

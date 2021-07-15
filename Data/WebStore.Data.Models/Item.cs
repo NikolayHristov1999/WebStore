@@ -1,8 +1,9 @@
-﻿using System;
-using WebStore.Data.Common.Models;
-
-namespace WebStore.Data.Models
+﻿namespace WebStore.Data.Models
 {
+    using System;
+
+    using WebStore.Data.Common.Models;
+
     public class Item : BaseDeletableModel<string>
     {
         public Item()
@@ -18,10 +19,12 @@ namespace WebStore.Data.Models
 
         public Product Product { get; set; }
 
-        public int? CartId { get; set; }
+        public string CartId { get; set; }
 
         public Cart Cart { get; set; }
 
-        public bool IsPurchased { get; set; }
+        public string SellerOrderId { get; set; }
+
+        public SellerOrder SellerOrder { get; set; }
     }
 }

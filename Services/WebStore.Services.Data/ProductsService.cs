@@ -8,6 +8,7 @@
 
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.Product;
 
@@ -20,14 +21,14 @@
         private readonly IRepository<CategoryProduct> categoryProductRepository;
         private readonly ICategoriesService categoriesService;
         private readonly ICategoriesProductsService categoriesProductsService;
-        private readonly IImageProcessing imageProcessing;
+        private readonly IImageProcessingService imageProcessing;
 
         public ProductsService (
             IDeletableEntityRepository<Product> productRepository,
             IRepository<CategoryProduct> categoryProductRepository,
             ICategoriesService categoriesService,
             ICategoriesProductsService categoriesProductsService,
-            IImageProcessing imageProcessing)
+            IImageProcessingService imageProcessing)
         {
             this.productsRepository = productRepository;
             this.categoryProductRepository = categoryProductRepository;

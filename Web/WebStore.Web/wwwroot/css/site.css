@@ -183,7 +183,7 @@ body {
     background-color: #c67605;
 }
 
-#lblCartCount {
+.lblCartCount {
     font-size: 12px;
     background: #dc3545;
     color: #fff;

@@ -23,7 +23,12 @@
                 </button>
 
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">@GlobalConstants.SystemName</a>
-
+                
+                <div class="align-content-end d-lg-none">
+                    <ul class="navbar-nav nav-item flex-row">
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
                 <div class="collapse navbar-collapse" id="navbarScroll">
                     <ul class="navbar-nav me-auto my-2 my-lg-0">
                         <li class="nav-item">
@@ -44,9 +49,12 @@
                         <button class="btn btn-outline-light mx-2" type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
-                <div class="align-content-end">
-                    <partial name="_LoginPartial" />
+                <div class="align-content-end d-none d-lg-block">
+                    <ul class="navbar-nav nav-item flex-row">
+                        <partial name="_LoginPartial" />
+                    </ul>
                 </div>
+
 
             </div>
         </nav>
