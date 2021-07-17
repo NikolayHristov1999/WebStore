@@ -10,6 +10,7 @@
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
+    using WebStore.Web.ViewModels.Administration.Products;
     using WebStore.Web.ViewModels.Product;
 
     public class ProductsService : IProductsService
@@ -72,14 +73,14 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            var products = this.productsRepository.AllAsNoTracking()
+            var products = this.productsRepository.All()
                 .To<T>();
             return products;
         }
 
         public IEnumerable<T> GetAllWithDeleted<T>()
         {
-            var products = this.productsRepository.AllAsNoTrackingWithDeleted()
+            var products = this.productsRepository.AllWithDeleted()
                 .To<T>();
             return products;
         }
@@ -127,6 +128,45 @@
             }
 
             return model;
+        }
+
+        public EditProductViewModel GetEditProductModelById(int id)
+        {
+            var product = this.productsRepository.AllWithDeleted()
+                .Where(x => x.Id == id)
+                .To<EditProductViewModel>()
+                .FirstOrDefault();
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            product.AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs();
+
+            var categoryIds = this.categoriesService.GetCategoriesForProduct(id)
+                .Select(x => new
+                {
+                    CategoryId = x.Id,
+                })
+                .ToList();
+
+            if (categoryIds != null)
+            {
+                int countOfCategoreis = categoryIds.Count();
+                product.FirstCategory = categoryIds[0].CategoryId.ToString();
+                if (countOfCategoreis == MaximumCategoriesPerProduct)
+                {
+                    product.SecondCategory = categoryIds[1].CategoryId.ToString();
+                    product.ThirdCategory = categoryIds[2].CategoryId.ToString();
+                }
+                else if (countOfCategoreis == MaximumCategoriesPerProduct - 1)
+                {
+                    product.SecondCategory = categoryIds[1].CategoryId.ToString();
+                }
+            }
+
+            return product;
         }
 
         public async Task UpdateAsync(int id, EditProductInputModel inputModel)
@@ -184,8 +224,33 @@
 
         public Product GetProductById(int id)
         {
-            return this.productsRepository.AllAsNoTrackingWithDeleted()
+            return this.productsRepository.AllWithDeleted()
                 .FirstOrDefault(x => x.Id == id);
+        }
+
+
+        public async Task IncreaseViewsNumber(int id)
+        {
+            var product = this.GetProductById(id);
+
+            if (product == null)
+            {
+                return;
+            }
+
+            product.Views++;
+
+            await this.productsRepository.SaveChangesAsync();
+        }
+
+        public IEnumerable<T> GetAllForSeller<T>(string userId)
+        {
+            return this.productsRepository.AllWithDeleted()
+                .Where(x => x.AddedByUserId == userId)
+                .OrderBy(x => x.IsDeleted)
+                .ThenByDescending(x => x.CreatedOn)
+                .To<T>()
+                .ToList();
         }
 
         private async Task UpdateCategoryProduct(int productId, string newCategoryId)
@@ -206,5 +271,6 @@
                 }
             }
         }
+
     }
 }

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
+    using WebStore.Data.Models;
     using WebStore.Web.ViewModels.Categories;
 
     public interface ICategoriesService
@@ -27,6 +28,8 @@
         T GetById<T>(int id);
 
         IEnumerable<CategorySidebarViewModel> GetAllMainCategoriesInfo();
+
+        IEnumerable<Category> GetCategoriesForProduct(int productId);
 
         Task DeleteCategoryById(int id);
     }

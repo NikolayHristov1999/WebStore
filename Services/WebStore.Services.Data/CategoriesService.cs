@@ -17,7 +17,8 @@
     {
         private readonly IDeletableEntityRepository<Category> categoriesRepository;
 
-        public CategoriesService(IDeletableEntityRepository<Category> categoriesRepository)
+        public CategoriesService(
+            IDeletableEntityRepository<Category> categoriesRepository)
         {
             this.categoriesRepository = categoriesRepository;
         }
@@ -108,7 +109,7 @@
 
         public T GetById<T>(int id)
         {
-            var category = this.categoriesRepository.AllAsNoTracking().Where(x => id == x.Id)
+            var category = this.categoriesRepository.All().Where(x => id == x.Id)
                 .To<T>().FirstOrDefault();
 
             return category;
@@ -116,7 +117,7 @@
 
         public IEnumerable<T> GetAllRootCategories<T>()
         {
-            return this.categoriesRepository.AllAsNoTrackingWithDeleted()
+            return this.categoriesRepository.All()
                 .Where(x => x.ParentCategoryId == null)
                 .To<T>();
         }
@@ -145,6 +146,13 @@
             }
 
             await this.categoriesRepository.SaveChangesAsync();
+        }
+
+        public IEnumerable<Category> GetCategoriesForProduct(int productId)
+        {
+            return this.categoriesRepository.All()
+                .Where(x => x.Products.Any(p => p.ProductId == productId))
+                .ToList();
         }
 
         public string GetCategoryName(int id)
@@ -178,6 +186,5 @@
             return this.categoriesRepository.AllAsNoTrackingWithDeleted()
                 .FirstOrDefault(x => id == x.Id);
         }
-
     }
 }

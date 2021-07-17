@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using WebStore.Common;
     using WebStore.Data;
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
@@ -185,6 +185,7 @@
                         PaymentMethod = order.PaymentMethod,
                         ShippingMethod = order.ShippingMethod,
                         ContactId = order.ContactId,
+                        Status = OrdersStatus.Created.ToString(),
                     };
                     sellerOrders[seller] = sellerOrderTmp;
                 }
@@ -202,13 +203,6 @@
             await this.itemRepository.SaveChangesAsync();
 
             return true;
-        }
-
-        private Cart GetCartById(string cartId)
-        {
-            return this.cartRepository.All()
-                .Where(x => x.Id == cartId)
-                .FirstOrDefault();
         }
     }
 }

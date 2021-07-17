@@ -94,3 +94,41 @@ function addToCartWithQuantity(id) {
         addToCart(id, quanity);
     }
 }
+
+function drawChart(info) {
+    var obj = JSON.parse(info);
+    console.log(obj);
+    var xValues = obj.days;
+    var yValues = obj.sales;
+
+    const data = {
+        labels: xValues,
+        datasets: [{
+            fill: false,
+            label: 'Sales',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: yValues,
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            plugins: {
+                filler: {
+                    propagate: false,
+                },
+            },
+            interaction: {
+                intersect: false,
+            }
+        },
+    };
+
+    var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+}

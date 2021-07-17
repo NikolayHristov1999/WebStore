@@ -10,6 +10,8 @@
 
         public const string DefaultAdminUserName = "admin@webstore.bg";
 
+        public const string DemoSellerEmail = "demoseller@webstore.bg";
+
         public const string NotEnoughQuantity = "Not enough quantity available";
 
         public const int MaximumLengthNameInView = 40;

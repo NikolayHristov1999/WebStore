@@ -228,3 +228,8 @@ body {
 .checked-star {
     color: orange;
 }
+
+.img-in-table-products {
+    max-height: 100px;
+    max-width: 100px !important;
+}

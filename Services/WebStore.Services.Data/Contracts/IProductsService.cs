@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using WebStore.Data.Models;
+    using WebStore.Web.ViewModels.Administration.Products;
     using WebStore.Web.ViewModels.Product;
 
     public interface IProductsService
@@ -14,9 +15,13 @@
 
         EditProductInputModel GetProductEditModelById(int id);
 
+        EditProductViewModel GetEditProductModelById(int id);
+
         Task UpdateAsync(int id, EditProductInputModel inputModel);
 
         IEnumerable<T> GetAll<T>();
+
+        IEnumerable<T> GetAllForSeller<T>(string userId);
 
         IEnumerable<T> GetAllWithDeleted<T>();
 
@@ -25,5 +30,7 @@
         Product GetProductById(int id);
 
         Task DeleteProductById(int id);
+
+        Task IncreaseViewsNumber(int id);
     }
 }

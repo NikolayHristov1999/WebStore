@@ -1,9 +1,6 @@
 ﻿namespace WebStore.Data.Models
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
     using WebStore.Data.Common.Models;
 
     public class Contact : BaseDeletableModel<int>
@@ -32,6 +29,8 @@
         public string Zip { get; set; }
 
         public string UserId { get; set; }
+
+        public string PhoneNumber { get; set; }
 
         public ApplicationUser User { get; set; }
     }

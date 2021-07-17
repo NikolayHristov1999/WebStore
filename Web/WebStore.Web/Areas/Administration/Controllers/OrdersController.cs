@@ -1,11 +1,12 @@
 ﻿namespace WebStore.Web.Areas.Administration.Controllers
 {
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Administration.Orders;
@@ -32,9 +33,27 @@
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await this.userManager.GetUserAsync(this.User);
+            var orders = this.salesmanService.GetAllOrdersForSeller(user.Id)
+                .OrderByDescending(x => x.CreatedOn);
+            var tableOrderModel = new List<TableOrderViewModel>();
+
+            foreach (var order in orders)
+            {
+                var contact = this.contactService.GetContactById(order.ContactId);
+                tableOrderModel.Add(new TableOrderViewModel
+                {
+                    SellerOrderId = order.Id,
+                    Name = contact.FirstName + " " + contact.LastName,
+                    Price = order.TotalPrice.ToString("f2"),
+                    Email = contact.Email,
+                    CreatedOn = order.CreatedOn,
+                });
+            }
+
+            return this.View(tableOrderModel);
         }
 
 
@@ -86,14 +105,14 @@
             return this.View(model);
         }
 
-        public async Task<IActionResult> MonthlySales()
+        public async Task<IActionResult> LastTwoWeekSales()
         {
             var days = new List<string>();
             var sales = new List<int>();
             var user = await this.userManager.GetUserAsync(this.User);
             var orders = this.salesmanService.GetAllOrdersForSeller(user.Id);
 
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < 14; i++)
             {
                 var date = DateTime.UtcNow.AddDays(i * -1);
                 var ordersCount = orders

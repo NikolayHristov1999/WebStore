@@ -1,0 +1,27 @@
+﻿@model IEnumerable<WebStore.Web.ViewModels.Administration.Orders.TableOrderViewModel>
+@{ 
+    ViewData["Title"] = "Orders";
+}
+<div class="container-fluid px-4">
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Orders Datatable
+        </div>
+        <div class="card-body">
+            <partial name="_OrdersTablePartial" model='Model' />
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#ordersDataTable').dataTable({
+                "order": [[3, "desc"]],
+                "columnDefs": [{ "targets": 3, "type": "date-eu" }]
+            });
+        });
+    </script>
+}

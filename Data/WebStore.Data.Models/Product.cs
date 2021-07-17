@@ -34,6 +34,12 @@
 
         public ApplicationUser AddedByUser { get; set; }
 
+        public long Views { get; set; }
+
+        public string MadeIn { get; set; }
+
+        public string StoredInCountry { get; set; }
+
         public ICollection<CategoryProduct> Categories { get; set; }
 
         public ICollection<Item> Items { get; set; }

@@ -25,7 +25,7 @@
         [Display(Name = "Street")]
         public string Street { get; set; }
 
-        [Display(Name = "Address")]
+        [Display(Name = "*Address")]
         public string Address { get; set; }
 
         [Required]
@@ -38,7 +38,12 @@
         [Display(Name = "City")]
         public string City { get; set; }
 
-        [Display(Name = "Zip")]
+        [RegularExpression(@"^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$")]
+        [Display(Name = "*Phone")]
+        public string PhoneNumber { get; set; }
+
+        [RegularExpression(@"[0-9]*")]
+        [Display(Name = "*Zip")]
         public string Zip { get; set; }
 
     }

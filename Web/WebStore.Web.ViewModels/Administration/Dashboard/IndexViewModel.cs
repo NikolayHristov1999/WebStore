@@ -2,6 +2,7 @@
 namespace WebStore.Web.ViewModels.Administration.Dashboard
 {
     using System.Collections.Generic;
+    using WebStore.Web.ViewModels.Administration.Orders;
 
     public class IndexViewModel
     {

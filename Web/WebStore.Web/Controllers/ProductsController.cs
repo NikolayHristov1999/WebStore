@@ -58,6 +58,8 @@
                 return this.NotFound();
             }
 
+            this.productsService.IncreaseViewsNumber((int)id);
+
             return this.View(product);
         }
 

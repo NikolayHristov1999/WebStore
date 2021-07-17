@@ -11,6 +11,7 @@
     using WebStore.Services.Data;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Administration.Dashboard;
+    using WebStore.Web.ViewModels.Administration.Orders;
 
     public class DashboardController : AdministrationController
     {

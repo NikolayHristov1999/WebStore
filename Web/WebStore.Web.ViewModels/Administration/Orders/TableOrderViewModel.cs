@@ -1,5 +1,5 @@
 ﻿
-namespace WebStore.Web.ViewModels.Administration.Dashboard
+namespace WebStore.Web.ViewModels.Administration.Orders
 {
     using System;
 
