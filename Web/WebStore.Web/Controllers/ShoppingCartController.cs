@@ -45,7 +45,6 @@
                 });
             }
 
-
             var cartId = await this.GetUserCartId();
 
             var itemInCart = await this.shoppingCartService

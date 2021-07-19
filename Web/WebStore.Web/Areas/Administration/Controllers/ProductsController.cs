@@ -1,11 +1,13 @@
 ﻿namespace WebStore.Web.Areas.Administration.Controllers
 {
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
+    using WebStore.Web.Infrastructure.Extensions;
     using WebStore.Web.ViewModels.Administration.Products;
 
     public class ProductsController : AdministrationController
@@ -26,14 +28,14 @@
 
         public async Task<IActionResult> Index()
         {
-            var user = await this.userManager.GetUserAsync(this.User);
-            var model = this.productsService.GetAllForSeller<TableProductViewModel>(user.Id);
+            var userId = this.User.GetId();
+            var model = this.productsService.GetAllForSeller<TableProductViewModel>(userId);
             return this.View(model);
         }
 
-        public async Task<IActionResult> ById(int? id)
+        public IActionResult ById(int? id)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
+            var userId = this.User.GetId();
             var model = this.productsService.GetEditProductModelById((int)id);
 
             if (model == null)
@@ -41,7 +43,7 @@
                 return this.NotFound();
             }
 
-            if (user.Id != this.productsService.GetProductById((int)id).AddedByUserId)
+            if (userId != this.productsService.GetProductById((int)id).AddedByUserId)
             {
                 return this.Unauthorized();
             }

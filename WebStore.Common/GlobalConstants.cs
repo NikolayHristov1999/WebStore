@@ -2,6 +2,8 @@
 {
     public static class GlobalConstants
     {
+        public const string UsersFileRootFolder = "wwwroot/UsersFiles";
+        
         public const string SystemName = "WebStore";
 
         public const string AdministratorRoleName = "Administrator";

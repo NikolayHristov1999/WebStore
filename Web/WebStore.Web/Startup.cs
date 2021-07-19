@@ -23,6 +23,8 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.FileProviders;
+    using System.IO;
 
     public class Startup
     {
@@ -66,6 +68,7 @@
 
             services.AddSingleton(this.configuration);
 
+
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
@@ -82,6 +85,7 @@
             services.AddTransient<ISalesmanService, SalesmanService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IOrdersService, OrdersService>();
+            services.AddTransient<IFilesService, FilesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,6 +111,7 @@
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

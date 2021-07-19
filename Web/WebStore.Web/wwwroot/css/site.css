@@ -229,6 +229,11 @@ body {
     color: orange;
 }
 
+.img-in-file-manager {
+    max-height: 150px;
+    max-width: 150px !important;
+}
+
 .img-in-table-products {
     max-height: 100px;
     max-width: 100px !important;

@@ -1,0 +1,90 @@
+﻿@using WebStore.Web.ViewModels.Administration.Files
+@model FilesTableViewModel
+
+<div class="container-fluid px-4 mt-4">
+    <form asp-controller="Files" asp-action="CreateFolder" class="row g-3 ">
+        <div class="col-auto">
+            <label asp-for="NewFolderName" class="control-label sr-only">Directory name</label>
+            <input asp-for="NewFolderName" type="text" class="form-control" placeholder="Directory name...">
+            <span asp-validation-for="NewFolderName" class="text-danger"></span>
+        </div>
+        <input asp-for="Path" type="hidden" value="@Model.Path">
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">Create New Folder Here</button>
+        </div>
+    </form>
+    <form asp-controller="Files" asp-action="AddFiles" class="row g-3 " enctype="multipart/form-data">
+        <div class="col-auto">
+            <label asp-for="AddFiles" class="control-label sr-only"></label>
+            <input asp-for="AddFiles" class="form-control" />
+            <span asp-validation-for="AddFiles" class="text-danger"></span>
+        </div>
+        <input asp-for="Path" type="hidden" value="@Model.Path">
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">Add Files</button>
+        </div>
+    </form>
+    <div class="row">
+        <table id="filesDataTable" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>File Name</th>
+                    <th>Size</th>
+                    <th>Created On</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th>File Name</th>
+                    <th>Size</th>
+                    <th>Created On</th>
+                    <th>Select</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in Model.Files)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @if (item.IsDirectory)
+                            {
+                                <img src="/images/folder.png" class="img-in-table-products img-thumbnail" />
+                            }
+                            @if (item.Name.EndsWith("png") || item.Name.EndsWith("jpg") || item.Name.EndsWith("jpg"))
+                            {
+                                <img src="@item.UrlPath" class="img-in-table-products img-thumbnail" />
+                            }
+                        </td>
+                        <td class="text-break text-wrap">@item.Name</td>
+                        <td>@item.Size KB</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreatedOn)</td>
+                        <td class="text-center">
+                            @if (item.IsDirectory)
+                            {
+                                <form method="post">
+                                    <label for="requestedPath" class="control-label sr-only"></label>
+                                    <input type="hidden" name="requestedPath" value="@(item.Name)">
+                                    <button type="submit" asp-area="Administration" asp-controller="Files" asp-action="Index" class="btn btn-primary">
+                                        Open
+                                    </button>
+                                </form>
+                            }
+                            @if (item.Name.EndsWith("png") || item.Name.EndsWith("jpg") || item.Name.EndsWith("jpg"))
+                            {
+                                <a asp-area="Administration" asp-controller="Files" asp-action="Index" class="btn btn-primary">
+                                    Select
+                                </a>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
