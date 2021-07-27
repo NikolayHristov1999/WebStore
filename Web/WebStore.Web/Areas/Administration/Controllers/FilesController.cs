@@ -71,7 +71,7 @@
                 Directory.CreateDirectory(fullPath);
             }
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction(nameof(this.Index), new { requestedPath = model.Path });
         }
 
         [HttpPost]

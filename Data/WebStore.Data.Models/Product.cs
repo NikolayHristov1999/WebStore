@@ -21,9 +21,9 @@
 
         public decimal Price { get; set; }
 
-        [Required]
-        [MinLength(10)]
         public string ShortDescription { get; set; }
+
+        public string Description { get; set; }
 
         [Required]
         public string ImageUrl { get; set; }

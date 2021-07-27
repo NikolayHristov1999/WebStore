@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-
+    using WebStore.Common;
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
@@ -16,46 +16,32 @@
     public class ProductsService : IProductsService
     {
         private const int MaximumCategoriesPerProduct = 3;
-        private const string ImagePath = "products";
 
         private readonly IDeletableEntityRepository<Product> productsRepository;
         private readonly IRepository<CategoryProduct> categoryProductRepository;
         private readonly ICategoriesService categoriesService;
         private readonly ICategoriesProductsService categoriesProductsService;
-        private readonly IImageProcessingService imageProcessing;
 
         public ProductsService (
             IDeletableEntityRepository<Product> productRepository,
             IRepository<CategoryProduct> categoryProductRepository,
             ICategoriesService categoriesService,
-            ICategoriesProductsService categoriesProductsService,
-            IImageProcessingService imageProcessing)
+            ICategoriesProductsService categoriesProductsService)
         {
             this.productsRepository = productRepository;
             this.categoryProductRepository = categoryProductRepository;
             this.categoriesService = categoriesService;
             this.categoriesProductsService = categoriesProductsService;
-            this.imageProcessing = imageProcessing;
         }
 
-        public async Task CreateAsync(ProductInputModel inputModel, string userId)
+        public async Task CreateAsync(CreateProductViewModel inputModel, string userId)
         {
-            var product = new Product
-            {
-                Name = inputModel.Name,
-                ShortDescription = inputModel.ShortDescription,
-                Price = inputModel.Price,
-                ImageUrl = inputModel.ImageUrl,
-                AddedByUserId = userId,
-                AvailableQuantity = inputModel.Quantity,
-            };
-
+            var product = AutoMapperConfig.MapperInstance.Map<Product>(inputModel);
+            product.AddedByUserId = userId;
 
             await this.productsRepository.AddAsync(product);
             await this.productsRepository.SaveChangesAsync();
 
-
-            await this.imageProcessing.UploadImageAsync(inputModel.MainImage, ImagePath + "/" + product.Id);
 
             var isValidated = int.TryParse(inputModel.FirstCategory, out int categoryId);
             if (isValidated && this.categoriesService.GetCategoryName(categoryId) != null)
@@ -71,63 +57,56 @@
             }
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public IEnumerable<T> GetAll<T>(string searchString = "")
         {
-            var products = this.productsRepository.All()
-                .To<T>();
-            return products;
-        }
-
-        public IEnumerable<T> GetAllWithDeleted<T>()
-        {
-            var products = this.productsRepository.AllWithDeleted()
-                .To<T>();
-            return products;
-        }
-
-        public EditProductInputModel GetProductEditModelById(int id)
-        {
-            var product = this.GetProductById(id);
-
-            if (product == null)
+            var products = this.productsRepository.AllAsNoTracking();
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                return null;
+                products = products.Where(x => x.Name.Contains(searchString));
             }
 
-            var model = new EditProductInputModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                ShortDescription = product.ShortDescription,
-                Price = product.Price,
-                ImageUrl = product.ImageUrl,
-                IsDeleted = product.IsDeleted,
-                AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs(),
-            };
+            return products.OrderBy(x => x.Id).To<T>().ToList();
+        }
 
-            var categoryIds = this.categoryProductRepository.AllAsNoTracking()
-                .Where(x => x.ProductId == product.Id)
-                .Select(x => new
-                    {
-                        CategoryId = x.CategoryId,
-                    })
+        public IEnumerable<T> GetAllWithDeleted<T>(string searchString = "")
+        {
+            var products = this.productsRepository.AllAsNoTrackingWithDeleted();
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                products = products.Where(x => x.Name.Contains(
+                    searchString,
+                    StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            return products.To<T>();
+        }
+
+        public IEnumerable<T> GetAllForSinglePage<T>(
+            int page = 1,
+            int productsPerPage = GlobalConstants.ProductsPerPage,
+            string searchString = "")
+        {
+            return this.GetAll<T>(searchString)
+                .Skip((page - 1) * productsPerPage)
+                .Take(productsPerPage);
+        }
+
+        public IEnumerable<T> GetAllForCategoryPage<T>(
+            int categoryId,
+            int page = 1,
+            int productsPerPage = GlobalConstants.ProductsPerPage)
+        {
+            return this.GetAllProductsInCategory<T>(categoryId)
+                .Skip((page - 1) * productsPerPage)
+                .Take(productsPerPage);
+        }
+
+        public IEnumerable<T> GetAllProductsInCategory<T>(int categoryId)
+        {
+            return this.productsRepository.AllAsNoTracking()
+                .Where(x => x.Categories.Any(y => y.CategoryId == categoryId))
+                .To<T>()
                 .ToList();
-            if (categoryIds != null)
-            {
-                int countOfCategoreis = categoryIds.Count();
-                model.FirstCategory = categoryIds[0].CategoryId.ToString();
-                if (countOfCategoreis == MaximumCategoriesPerProduct)
-                {
-                    model.SecondCategory = categoryIds[1].CategoryId.ToString();
-                    model.ThirdCategory = categoryIds[2].CategoryId.ToString();
-                }
-                else if (countOfCategoreis == MaximumCategoriesPerProduct - 1)
-                {
-                    model.SecondCategory = categoryIds[1].CategoryId.ToString();
-                }
-            }
-
-            return model;
         }
 
         public EditProductViewModel GetEditProductModelById(int id)
@@ -169,16 +148,19 @@
             return product;
         }
 
-        public async Task UpdateAsync(int id, EditProductInputModel inputModel)
+        public async Task UpdateAsync(int id, EditProductViewModel inputModel)
         {
             var product = this.productsRepository.AllWithDeleted().FirstOrDefault(x => x.Id == id);
             product.Name = inputModel.Name;
             product.Price = inputModel.Price;
             product.ShortDescription = inputModel.ShortDescription;
+            product.Description = inputModel.Description;
+            product.MadeIn = inputModel.MadeIn;
+            product.StoredInCountry = inputModel.StoredInCountry;
             product.ImageUrl = inputModel.ImageUrl;
             product.IsDeleted = inputModel.IsDeleted;
             product.ModifiedOn = DateTime.UtcNow;
-            product.AvailableQuantity = inputModel.Quantity;
+            product.AvailableQuantity = inputModel.AvailableQuantity;
 
             if (product.IsDeleted)
             {
@@ -195,7 +177,7 @@
                 await this.UpdateCategoryProduct(id, inputModel.SecondCategory);
             }
 
-            if ( inputModel.ThirdCategory != null &&
+            if (inputModel.ThirdCategory != null &&
                 !inputModel.ThirdCategory.Equals(inputModel.FirstCategory) && 
                 !inputModel.ThirdCategory.Equals(inputModel.SecondCategory))
             {

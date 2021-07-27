@@ -65,5 +65,10 @@
 
             return this.View(viewModel);
         }
+
+        public IActionResult Charts()
+        {
+            return this.View();
+        }
     }
 }

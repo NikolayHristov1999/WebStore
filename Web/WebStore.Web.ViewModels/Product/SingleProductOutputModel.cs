@@ -7,6 +7,7 @@
     using System.Text;
 
     using AutoMapper;
+    using Ganss.XSS;
     using WebStore.Data.Models;
     using WebStore.Services.Mapping;
 
@@ -14,6 +15,12 @@
     {
         [Display(Name = "Short description")]
         public string ShortDescription { get; set; }
+
+        public string SanitizedShortDescription => new HtmlSanitizer().Sanitize(this.ShortDescription);
+
+        public string Description { get; set; }
+
+        public string SanitizedDescription => new HtmlSanitizer().Sanitize(this.Description);
 
         [Display(Name = "Added by User")]
         public string AddedByUserName { get; set; }

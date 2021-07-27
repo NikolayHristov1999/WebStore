@@ -69,6 +69,11 @@
       "provider": "cdnjs",
       "library": "Chart.js@3.4.1",
       "destination": "wwwroot/lib/Chart.js/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "tinymce@5.8.2",
+      "destination": "wwwroot/lib/tinymce/"
     }
   ]
 }

@@ -7,21 +7,28 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using WebStore.Common;
     using WebStore.Data;
     using WebStore.Data.Models;
     using WebStore.Services.Data;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Categories;
+    using WebStore.Web.ViewModels.Product;
 
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly ICategoriesService categoriesService;
+        private readonly IProductsService productsService;
 
-        public CategoriesController(ApplicationDbContext context, ICategoriesService categoriesService)
+        public CategoriesController(
+            ApplicationDbContext context, 
+            ICategoriesService categoriesService,
+            IProductsService productsService)
         {
             _context = context;
             this.categoriesService = categoriesService;
+            this.productsService = productsService;
         }
 
         public IActionResult All()
@@ -29,7 +36,7 @@
             return this.View(this.categoriesService.GetAllRootCategories<CategoryListOutputModel>());
         }
 
-        public IActionResult ById(int? id)
+        public IActionResult ById(int? id, int page = 1)
         {
             if (id == null)
             {
@@ -41,6 +48,15 @@
             {
                 return this.NotFound();
             }
+
+            category.SinglePageProducts = new ListProductsViewModel
+            {
+                ProductsPerPage = GlobalConstants.ProductsPerPage,
+                PageNumber = page,
+                ProductsCount = this.productsService.GetAllProductsInCategory<ProductInListViewModel>((int)id).Count(),
+                Products = this.productsService.GetAllForCategoryPage<ProductInListViewModel>((int)id, page, GlobalConstants.ProductsPerPage),
+            };
+
 
             return this.View(category);
         }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebStore.Web.ViewModels.Product.ListProductOutputModel>
+﻿@model WebStore.Web.ViewModels.Product.ListProductsViewModel
 @inject WebStore.Services.Data.Contracts.ICategoriesService categoriesService
 @{
     var categories = categoriesService.GetAllMainCategoriesInfo();
@@ -11,37 +11,37 @@
                     <span class="h4 fw-semibold">Categories</span>
                 </a>
                 <ul class="list-unstyled ps-0">
-                   @foreach (var category in categories)
+                    @foreach (var category in categories)
                     {
-                    <li class="mb-1 ">
-                        <button class="btn btn-toggle align-items-center rounded collapsed @(category.SubCategories.Count() < 1 ? "disabled" : "")" data-bs-toggle="collapse" data-bs-target="#@category.Name-collapse" aria-expanded="false">
-                        </button>
-                        <a asp-controller="categories" asp-action="ById" asp-route-id="@category.Id" class="fs-5 link-dark text-root-category">
-                            @category.Name
-                        </a>
-                        <div class="collapse" id="@category.Name-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                               @foreach (var subCategory in category.SubCategories)
-                                {
-                                <li>
-                                    <a asp-controller="categories" asp-action="ById" asp-route-id="@subCategory.Id" class="fs-6 link-dark rounded">
-                                        @subCategory.Name
-                                    </a>
-                                </li>
-                                }
-                            </ul>
-                        </div>
-                    </li>
+                        <li class="mb-1 ">
+                            <button class="btn btn-toggle align-items-center rounded collapsed @(category.SubCategories.Count() < 1 ? "disabled" : "")" data-bs-toggle="collapse" data-bs-target="#@category.Name-collapse" aria-expanded="false">
+                            </button>
+                            <a asp-controller="categories" asp-action="ById" asp-route-id="@category.Id" class="fs-5 link-dark text-root-category">
+                                @category.Name
+                            </a>
+                            <div class="collapse" id="@category.Name-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    @foreach (var subCategory in category.SubCategories)
+                                    {
+                                        <li>
+                                            <a asp-controller="categories" asp-action="ById" asp-route-id="@subCategory.Id" class="fs-6 link-dark rounded">
+                                                @subCategory.Name
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </li>
                     }
-                    
+
                     <li class="border-top my-3"></li>
                 </ul>
             </div>
         </div>
-        
+
         <div class="col-lg-9">
             <div class="row g-2">
-                @foreach (var product in Model)
+                @foreach (var product in Model.Products)
                 {
                     <div class="col-md-4">
                         <div class="product py-4">
@@ -69,9 +69,8 @@
 
             </div>
         </div>
+        <partial name="_PagingPartial" model="@Model" />
         <form method="post" id="antiForgeryForm"></form>
-
-
         <div class="modal fade" id="addedItemToCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">

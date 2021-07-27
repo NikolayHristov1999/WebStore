@@ -26,11 +26,36 @@
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var userId = this.User.GetId();
             var model = this.productsService.GetAllForSeller<TableProductViewModel>(userId);
             return this.View(model);
+        }
+
+        public IActionResult Create()
+        {
+            var model = new CreateProductViewModel
+            {
+                AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Create(CreateProductViewModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            await this.productsService.CreateAsync(model, this.User.GetId());
+
+            this.TempData["Message"] = "Product added successfully.";
+            return this.RedirectToAction(nameof(this.Index));
         }
 
         public IActionResult ById(int? id)
@@ -51,9 +76,33 @@
             return this.View(model);
         }
 
-        public IActionResult Create()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ById(int? id, EditProductViewModel model)
         {
-            return View();
+            var userId = this.User.GetId();
+
+            var currentProductState = this.productsService.GetProductById((int)id);
+            if (currentProductState == null)
+            {
+                return this.NotFound();
+            }
+
+            if (userId != currentProductState.AddedByUserId)
+            {
+                return this.Unauthorized();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                model.AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs();
+                return this.View(model);
+            }
+
+            await this.productsService.UpdateAsync((int)id, model);
+            return this.RedirectToAction(nameof(this.Index));
+
         }
+
     }
 }

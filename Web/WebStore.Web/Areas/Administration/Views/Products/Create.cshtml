@@ -1,0 +1,114 @@
+﻿@using WebStore.Web.ViewModels.Administration.Products
+@model CreateProductViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Create Product";
+    var categoryItems = this.Model.AllCategories.Select(x => new SelectListItem(x.Value, x.Key));
+}
+
+
+<div class="containter-fluid px-4">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end col-auto mt-2">
+        <a asp-controller="Files" asp-action="Index" class="btn btn-primary mb-2 text-end">File Manager</a>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ShortDescription" class="control-label"></label>
+                    <textarea asp-for="ShortDescription" class="form-control" id="shortDescription"></textarea>
+                    <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" id="mainDescription"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ImageUrl" class="control-label"></label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="AvailableQuantity" class="control-label"></label>
+                    <input asp-for="AvailableQuantity" class="form-control" />
+                    <span asp-validation-for="AvailableQuantity" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="MadeIn" class="control-label"></label>
+                    <input asp-for="MadeIn" class="form-control" />
+                    <span asp-validation-for="MadeIn" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="StoredInCountry" class="control-label"></label>
+                    <input asp-for="StoredInCountry" class="form-control" />
+                    <span asp-validation-for="StoredInCountry" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="FirstCategory"></label>
+                    <select asp-for="FirstCategory" class="form-control" data-live-search="true" asp-items="categoryItems">
+                        <option value="">&lt;none&gt;</option>
+                    </select>
+                    <span asp-validation-for="FirstCategory" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="SecondCategory"></label>
+                    <select asp-for="SecondCategory" class="form-control" data-live-search="true" asp-items="categoryItems">
+                        <option value="">&lt;none&gt;</option>
+                    </select>
+                    <span asp-validation-for="SecondCategory" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ThirdCategory"></label>
+                    <select asp-for="ThirdCategory" class="form-control" data-live-search="true" asp-items="categoryItems">
+                        <option value="">&lt;none&gt;</option>
+                    </select>
+                    <span asp-validation-for="ThirdCategory" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#shortDescription',
+            height: 400,
+            plugins: [
+                "image paste table link code media"
+            ]
+        });
+    </script>
+
+    <script>
+        tinymce.init({
+            selector: '#mainDescription',
+            height: 800,
+            plugins: [
+                "image paste table link code media fullscreen"
+            ],
+            fullscreen_native: true
+
+        });
+    </script>
+}
+
