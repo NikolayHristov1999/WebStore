@@ -69,7 +69,10 @@
 
             </div>
         </div>
-        <partial name="_PagingPartial" model="@Model" />
+        @if (Model.Products.Count() > 0)
+        {
+            <partial name="_PagingPartial" model="@Model" />
+        }
         <form method="post" id="antiForgeryForm"></form>
         <div class="modal fade" id="addedItemToCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

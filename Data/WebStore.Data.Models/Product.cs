@@ -13,6 +13,7 @@
         {
             this.Categories = new HashSet<CategoryProduct>();
             this.Items = new HashSet<Item>();
+            this.Reviews = new HashSet<Review>();
         }
 
         [MinLength(3)]
@@ -40,9 +41,13 @@
 
         public string StoredInCountry { get; set; }
 
+        public bool Approved { get; set; }
+
         public ICollection<CategoryProduct> Categories { get; set; }
 
         public ICollection<Item> Items { get; set; }
+
+        public ICollection<Review> Reviews { get; set; }
 
     }
 }

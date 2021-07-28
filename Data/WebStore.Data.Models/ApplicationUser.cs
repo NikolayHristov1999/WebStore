@@ -19,8 +19,8 @@ namespace WebStore.Data.Models
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.Contacts = new HashSet<Contact>();
             this.Orders = new HashSet<Order>();
-            this.Votes = new HashSet<Vote>();
             this.Carts = new HashSet<Cart>();
+            this.Reviews = new HashSet<Review>();
         }
 
         public ApplicationUser(string name)
@@ -54,8 +54,8 @@ namespace WebStore.Data.Models
 
         public virtual ICollection<Order> Orders { get; set; }
 
-        public virtual ICollection<Vote> Votes { get; set; }
-
         public virtual ICollection<Cart> Carts { get; set; }
+
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

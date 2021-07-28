@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebStore.Data;
 
 namespace WebStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210727124809_AddReviewModelAndApprovedProductProperty")]
+    partial class AddReviewModelAndApprovedProductProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -535,9 +537,6 @@ namespace WebStore.Data.Migrations
                     b.Property<string>("AddedByUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("Approved")
-                        .HasColumnType("bit");
-
                     b.Property<int>("AvailableQuantity")
                         .HasColumnType("int");
 
@@ -586,52 +585,6 @@ namespace WebStore.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("WebStore.Data.Models.Review", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Stars")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.SellerOrder", b =>
@@ -717,6 +670,24 @@ namespace WebStore.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("WebStore.Data.Models.Vote", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<byte>("Value")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("ProductId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -882,23 +853,6 @@ namespace WebStore.Data.Migrations
                     b.Navigation("AddedByUser");
                 });
 
-            modelBuilder.Entity("WebStore.Data.Models.Review", b =>
-                {
-                    b.HasOne("WebStore.Data.Models.Product", "Product")
-                        .WithMany("Reviews")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("WebStore.Data.Models.ApplicationUser", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("WebStore.Data.Models.SellerOrder", b =>
                 {
                     b.HasOne("WebStore.Data.Models.ApplicationUser", "Buyer")
@@ -922,6 +876,25 @@ namespace WebStore.Data.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("WebStore.Data.Models.Vote", b =>
+                {
+                    b.HasOne("WebStore.Data.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebStore.Data.Models.ApplicationUser", "User")
+                        .WithMany("Votes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebStore.Data.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Carts");
@@ -936,9 +909,9 @@ namespace WebStore.Data.Migrations
 
                     b.Navigation("Products");
 
-                    b.Navigation("Reviews");
-
                     b.Navigation("Roles");
+
+                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Cart", b =>
@@ -960,8 +933,6 @@ namespace WebStore.Data.Migrations
                     b.Navigation("Categories");
 
                     b.Navigation("Items");
-
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.SellerOrder", b =>

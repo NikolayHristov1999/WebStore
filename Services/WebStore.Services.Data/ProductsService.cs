@@ -211,7 +211,7 @@
         }
 
 
-        public async Task IncreaseViewsNumber(int id)
+        public async Task IncreaseViewsNumberAsync(int id)
         {
             var product = this.GetProductById(id);
 

@@ -1,6 +1,11 @@
-﻿@model WebStore.Web.ViewModels.Product.SingleProductOutputModel
+﻿@using Microsoft.AspNetCore.Identity
+@using WebStore.Data.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+@model WebStore.Web.ViewModels.Product.SingleProductOutputModel
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = Model.Name;
 }
 
 <div class="container-fluid">
@@ -38,7 +43,7 @@
                         </div>
 
                         <div class="text-center carousel-item main-img-height-in-product">
-                            <img src="https://assets.entrepreneur.com/content/3x2/2000/20200429211042-GettyImages-1164615296.jpeg" 
+                            <img src="https://assets.entrepreneur.com/content/3x2/2000/20200429211042-GettyImages-1164615296.jpeg"
                                  class="d-block img-in-item-contrainer " alt="...">
                         </div>
                     </div>
@@ -57,12 +62,27 @@
             <div class="row d-none d-md-block">
                 <h1 class="fs-3">@Model.Name</h1>
                 <div class="mb-2">
-                    <i class="fas fa-star checked-star"></i>
-                    <i class="fas fa-star checked-star"></i>
-                    <i class="fas fa-star checked-star"></i>
-                    <i class="fas fa-star-half-alt checked-star"></i>
-                    <i class="far fa-star"></i>
-                    (41 Reviews)
+                    @{
+                        var stars = 1;
+                    }
+                    @while (Model.ProductReviews.AvrScore - stars >= 0)
+                    {
+                        <i class="fas fa-star checked-star"></i>
+                        stars = stars + 1;
+                    }
+                    @while (stars <= 5)
+                    {
+                        if (stars - Model.ProductReviews.AvrScore < 1 && stars - Model.ProductReviews.AvrScore >= 0.5)
+                        {
+                            <i class="fas fa-star-half-alt checked-star"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-star"></i>
+                        }
+                        stars = stars + 1;
+                    }
+                    (@Model.ProductReviews.Reviews.Count() Reviews)
                 </div>
                 <span class="fs-5 mb-2 fw-bold">
                     $@Model.Price
@@ -102,69 +122,108 @@
                 </div>
                 <div class="mt-4">
                     <button class="btn btn-primary me-2 " onclick="addToCartWithQuantity(@Model.Id)">Add To Cart</button>
-                    <a asp-controller="ShoppingCart" asp-action="Checkout" class="btn btn-secondary" >Go To Checkout</a>
+                    <a asp-controller="ShoppingCart" asp-action="Checkout" class="btn btn-secondary">Go To Checkout</a>
                 </div>
             </div>
         </div>
     </div>
-        <div class="row mt-4 ms-0">
-            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-                <li class="nav-item col-4" role="presentation">
-                    <a class="nav-link active text-center" id="home-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="home" aria-selected="true">Description</a>
-                </li>
-                <li class="nav-item col-4 text-center" role="presentation">
-                    <a class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#reviews" role="tab" type="button" aria-controls="contact" aria-selected="false">Reviews</a>
-                </li>
+    <div class="row mt-4 ms-0 mb-4">
+        <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+            <li class="nav-item col-4" role="presentation">
+                <a class="nav-link active text-center" id="home-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="home" aria-selected="true">Description</a>
+            </li>
+            <li class="nav-item col-4 text-center" role="presentation">
+                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#reviews" role="tab" type="button" aria-controls="contact" aria-selected="false">Reviews</a>
+            </li>
 
-                <li class="nav-item col-4 text-center" role="presentation">
-                    <a class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#faq" role="tab" type="button" aria-controls="profile" aria-selected="false">FAQ</a>
-                </li>
-            </ul>
+            <li class="nav-item col-4 text-center" role="presentation">
+                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#faq" role="tab" type="button" aria-controls="profile" aria-selected="false">FAQ</a>
+            </li>
+        </ul>
 
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="home-tab">
-                    @Html.Raw(Model.SanitizedDescription)
-                </div>
-                <div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="contact-tab">...</div>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="home-tab">
+                @Html.Raw(Model.SanitizedDescription)
             </div>
-            <div class="col-4">
+            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="contact-tab">
+                @if (this.SignInManager.IsSignedIn(this.User))
+                {
+                    <form asp-controller="Products" asp-action="CreateReview" asp-route-id="@Model.Id" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group mb-2">
+                            <label asp-for="FullName" class="control-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="Content" class="control-label"></label>
+                            <textarea asp-for="Content" class="form-control"></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="Stars"></label>
+                            <input asp-for="Stars" value="5" min="1" max="5" class="form-control" />
+                            <span asp-validation-for="Stars" class="text-danger"></span>
+                        </div>
+                        <div class="form-group ">
+                            <input type="submit" value="Add Review" class="btn btn-primary" />
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div class="text-danger">You need to login to make a review</div>
+                }
+
+                @foreach (var review in Model.ProductReviews.Reviews)
+                {
+                    <div class="card mb-4 mt-2">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">@review.Name</div>
+                                <div class="col-6 text-end">
+                                    @{
+                                        stars = 1;
+                                    }
+                                    @while (Model.ProductReviews.AvrScore - stars >= 0)
+                                    {
+                                        <i class="fas fa-star checked-star"></i>
+                                        stars = stars + 1;
+                                    }
+                                    @while (stars <= 5)
+                                    {
+                                        if (stars - Model.ProductReviews.AvrScore < 1 && stars - Model.ProductReviews.AvrScore >= 0.5)
+                                        {
+                                            <i class="fas fa-star-half-alt checked-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                        stars = stars + 1;
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@review.Content</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Create on: @review.CreatedOn
+                        </div>
+                    </div>
+
+                }
+            </div>
+            <div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="profile-tab">tets</div>
+        </div>
+        <div class="col-4">
 
         </div>
     </div>
 </div>
 
 
-@section Scripts{ 
-<script>
-    function changeValue(sign)
-    {
-        var el = document.getElementById("quantityValue");
-        var value = parseInt(el.value)
-        if (sign == '+') {
-            if (value < 1000) {
-                el.value = value + 1;
-            }
-        }
-        else {
-            if (value > 1) {
-                el.value = value - 1;
-            }
-        }
+@section Scripts{
 
-        if (el.Value != 1) {
-            document.getElementById("buttonMinus").disabled = "";
-        }
-        else {
-            document.getElementById("buttonMinus").disabled = true;
-        }
-        if (el.Value != 1000) {
-            document.getElementById("buttonPlus").disabled = "";
-        }
-        else {
-            document.getElementById("buttonPlus").disabled = true;
-        }
-    }
-   
-</script>
 } 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebStore.Data;
 
 namespace WebStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210727141221_AddUserToReview2")]
+    partial class AddUserToReview2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -719,6 +721,24 @@ namespace WebStore.Data.Migrations
                     b.ToTable("Settings");
                 });
 
+            modelBuilder.Entity("WebStore.Data.Models.Vote", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<byte>("Value")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("ProductId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Votes");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("WebStore.Data.Models.ApplicationRole", null)
@@ -922,6 +942,25 @@ namespace WebStore.Data.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("WebStore.Data.Models.Vote", b =>
+                {
+                    b.HasOne("WebStore.Data.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebStore.Data.Models.ApplicationUser", "User")
+                        .WithMany("Votes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebStore.Data.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Carts");
@@ -939,6 +978,8 @@ namespace WebStore.Data.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("Roles");
+
+                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("WebStore.Data.Models.Cart", b =>

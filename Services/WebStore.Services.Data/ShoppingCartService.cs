@@ -134,7 +134,6 @@
             return this.itemRepository.All()
                 .Where(x => x.CartId == cartId)
                 .Count();
-
         }
 
         public async Task<bool> RemoveItemFromCartAsync(string itemId, string cartId)

@@ -2,6 +2,7 @@
 namespace WebStore.Web.ViewModels
 {
     using System;
+    using System.Collections.Generic;
 
     public class PagingViewModel
     {
@@ -20,5 +21,7 @@ namespace WebStore.Web.ViewModels
         public int ProductsCount { get; set; }
 
         public int ProductsPerPage { get; set; }
+
+        public Dictionary<string, string> QueryParams { get; set; } = new Dictionary<string, string>();
     }
 }

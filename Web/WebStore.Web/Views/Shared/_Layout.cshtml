@@ -38,13 +38,13 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Products" asp-action="All">Products</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Products" asp-action="All" asp-route-id="">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Categories" asp-action="All" asp-route-id="">Categories</a>
                         </li>
                     </ul>
-                    <form class="d-flex" asp-controller="Products" asp-action="All" method="get">
+                    <form class="d-flex" asp-controller="Products" asp-action="All" asp-route-id="" method="get">
                         <input class="form-control" type="search" placeholder="Search" name="search" aria-label="Search" />
                         <button class="btn btn-outline-light mx-2" type="submit"><i class="fas fa-search"></i></button>
                     </form>

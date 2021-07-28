@@ -41,6 +41,6 @@
 
         Task DeleteProductById(int id);
 
-        Task IncreaseViewsNumber(int id);
+        Task IncreaseViewsNumberAsync(int id);
     }
 }
