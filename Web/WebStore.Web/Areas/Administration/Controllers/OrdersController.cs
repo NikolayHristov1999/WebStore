@@ -10,6 +10,7 @@
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Administration.Orders;
+    using WebStore.Web.ViewModels.Contact;
 
     public class OrdersController : AdministrationController
     {
@@ -89,7 +90,7 @@
                 PaymentMethod = order.PaymentMethod,
                 ShippingMethod = order.ShippingMethod,
                 CreatedOn = order.CreatedOn.ToString(),
-                ContactInfo = new ContactViewModel
+                ContactInfo = new ContactOrderViewModel
                 {
                     ClientName = contact.FirstName + " " + contact.LastName,
                     Email = contact.Email,

@@ -1,14 +1,16 @@
 ﻿namespace WebStore.Web.ViewModels.ShoppingCart
 {
-    using AutoMapper.Configuration.Annotations;
     using System.ComponentModel.DataAnnotations;
+
+    using AutoMapper.Configuration.Annotations;
     using WebStore.Data.Models;
     using WebStore.Services.Mapping;
+    using WebStore.Web.ViewModels.Contact;
 
     public class CheckoutInputModel : IMapTo<Order>
     {
         [Required]
-        public ContactInputModel Contact { get; set; }
+        public ContactFormModel Contact { get; set; }
 
         [Required]
         [Display(Name = "Shipping Method")]

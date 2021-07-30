@@ -10,16 +10,20 @@
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
+    using WebStore.Services.Mapping;
 
     public class SalesmanService : ISalesmanService
     {
+        private readonly IDeletableEntityRepository<Dealer> dealerRepository;
         private readonly IDeletableEntityRepository<Item> itemRepository;
         private readonly IDeletableEntityRepository<SellerOrder> sellerOrderRepository;
 
         public SalesmanService(
+            IDeletableEntityRepository<Dealer> dealerRepository,
             IDeletableEntityRepository<Item> itemRepository,
             IDeletableEntityRepository<SellerOrder> sellerOrderRepository)
         {
+            this.dealerRepository = dealerRepository;
             this.itemRepository = itemRepository;
             this.sellerOrderRepository = sellerOrderRepository;
         }
@@ -54,6 +58,14 @@
             return this.itemRepository.All()
                 .Where(x => x.SellerOrderId == sellerOrderId)
                 .ToList();
+        }
+
+        public T GetDealerByUserId<T>(string userId)
+        {
+            return this.dealerRepository.All()
+                .Where(x => x.UserId == userId)
+                .To<T>()
+                .FirstOrDefault();
         }
     }
 }

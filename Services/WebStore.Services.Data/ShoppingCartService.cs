@@ -1,16 +1,16 @@
 ﻿namespace WebStore.Services.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using WebStore.Common;
-    using WebStore.Data;
+
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.ShoppingCart;
+
+    using static WebStore.Data.Common.DataConstants;
 
     public class ShoppingCartService : IShoppingCartService
     {

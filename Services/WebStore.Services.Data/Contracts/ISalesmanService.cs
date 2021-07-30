@@ -18,5 +18,7 @@
 
         IEnumerable<Item> GetAllItemsBySellerOrderId(string sellerOrderId);
 
+        T GetDealerByUserId<T>(string userId);
+
     }
 }

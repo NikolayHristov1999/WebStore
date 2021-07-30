@@ -4,6 +4,14 @@
 }
 
 <div class="text-center">
+    @if (this.TempData.ContainsKey("Message"))
+    {
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @this.TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    }
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>

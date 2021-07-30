@@ -1,29 +1,31 @@
-﻿ namespace WebStore.Web.Controllers
+﻿namespace WebStore.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using WebStore.Common;
     using WebStore.Data.Models;
-    using WebStore.Services.Data;
     using WebStore.Services.Data.Contracts;
+    using WebStore.Services.Messaging;
     using WebStore.Web.ViewModels.ShoppingCart;
 
 
     public class ShoppingCartController : Controller
     {
         private readonly IShoppingCartService shoppingCartService;
+        private readonly IEmailSender emailSender;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ShoppingCartController(
             IShoppingCartService shoppingCartService,
+            IEmailSender emailSender,
             UserManager<ApplicationUser> userManager)
         {
             this.shoppingCartService = shoppingCartService;
+            this.emailSender = emailSender;
             this.userManager = userManager;
         }
 
@@ -147,8 +149,10 @@
                 return this.View(model);
             }
 
+            //await this.emailSender.SendEmailAsync(sender, "WebStore.bg", reciever, "Test", "Content");
             cartId = await this.shoppingCartService.CreateCartAsync(user != null ? user.Id : null);
             this.HttpContext.Session.SetString(nameof(Cart), cartId);
+
             return this.Redirect("/products/all");
         }
 

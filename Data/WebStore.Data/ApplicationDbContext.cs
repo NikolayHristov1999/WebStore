@@ -44,6 +44,8 @@
 
         public DbSet<Review> Reviews { get; set; }
 
+        public DbSet<Dealer> Dealers { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -68,6 +70,13 @@
 
             builder.Entity<CategoryProduct>()
                 .HasKey(x => new { x.ProductId, x.CategoryId });
+
+            builder
+                .Entity<Dealer>()
+                .HasOne<ApplicationUser>()
+                .WithOne()
+                .HasForeignKey<Dealer>(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

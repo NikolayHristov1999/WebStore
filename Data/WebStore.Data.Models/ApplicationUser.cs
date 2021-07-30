@@ -57,5 +57,6 @@ namespace WebStore.Data.Models
         public virtual ICollection<Cart> Carts { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; }
+
     }
 }

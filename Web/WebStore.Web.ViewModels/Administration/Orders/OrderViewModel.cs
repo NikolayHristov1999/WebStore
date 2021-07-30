@@ -1,8 +1,10 @@
 ﻿
-using System.Collections.Generic;
-
 namespace WebStore.Web.ViewModels.Administration.Orders
 {
+    using System.Collections.Generic;
+
+    using WebStore.Web.ViewModels.Contact;
+
     public class OrderViewModel
     {
         public string Id { get; set; }
@@ -15,7 +17,7 @@ namespace WebStore.Web.ViewModels.Administration.Orders
 
         public string TotalPrice { get; set; }
 
-        public ContactViewModel ContactInfo { get; set; }
+        public ContactOrderViewModel ContactInfo { get; set; }
 
         public IEnumerable<ItemViewModel> Items { get; set; }
     }
