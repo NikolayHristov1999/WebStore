@@ -4,10 +4,10 @@
     using System.ComponentModel.DataAnnotations;
 
     using AutoMapper.Configuration.Annotations;
-    using WebStore.Services.Mapping;
     using WebStore.Data.Models;
+    using WebStore.Services.Mapping;
 
-    public class CreateProductViewModel : IMapFrom<Product>, IMapTo<Product>
+    public class CreateProductFormModel : IMapFrom<Product>, IMapTo<Product>
     {
         [MinLength(10)]
         [MaxLength(100)]
@@ -30,23 +30,14 @@
         [Display(Name = "Quantity")]
         public int AvailableQuantity { get; set; }
 
-        [Display(Name = "First Category")]
-        [Ignore]
-        public string FirstCategory { get; set; }
-
-        [Display(Name = "Second Category")]
-        [Ignore]
-        public string SecondCategory { get; set; }
-
-        [Display(Name = "Third Category")]
-        [Ignore]
-        public string ThirdCategory { get; set; }
-
         [Display(Name = "Made in")]
         public string MadeIn { get; set; }
 
         [Display(Name = "Stored in country")]
         public string StoredInCountry { get; set; }
+
+        [Display(Name = "Category")]
+        public IList<int?> CategoriesId { get; set; } = new List<int?>();
 
         [Ignore]
         public IEnumerable<KeyValuePair<string, string>> AllCategories { get; set; }

@@ -1,24 +1,29 @@
 ﻿namespace WebStore.Web.Areas.Administration.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
     using WebStore.Common;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Administration.Dealers;
     using WebStore.Web.ViewModels.Administration.Orders;
 
+    using static WebStore.Data.Common.DataConstants;
+
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     public class DealersController : AdministrationController
     {
         private readonly IUsersService usersService;
-        private readonly ISalesmanService salesmanService;
+        private readonly IDealerService salesmanService;
         private readonly IContactService contactService;
 
         public DealersController(
             IUsersService usersService,
-            ISalesmanService salesmanService,
+            IDealerService salesmanService,
             IContactService contactService)
         {
             this.usersService = usersService;
@@ -28,7 +33,8 @@
 
         public IActionResult Index()
         {
-            return View();
+            var model = this.salesmanService.GetAllDealers<TableDealerViewModel>();
+            return this.View(model);
         }
 
         public IActionResult Details(string id)
@@ -39,6 +45,11 @@
             }
 
             var model = this.salesmanService.GetDealerByUserId<DetailsDealerViewModel>(id);
+            if (model == null)
+            {
+                return this.NotFound();
+            }
+
             var dealerSales = this.salesmanService.GetAllOrdersForSeller(id)
                 .OrderByDescending(x => x.CreatedOn);
             var tableOrderModel = new List<TableOrderViewModel>();
@@ -61,9 +72,26 @@
             return this.View(model);
         }
 
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Details(string id, string status)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            if (!await this.salesmanService.ChangeDealerStatusAsync(id, status))
+            {
+                this.TempData["Message"] = "Unavailable user or dealer status!";
+            }
+
+            return this.RedirectToAction("Details");
+        }
+
         public IActionResult Pending()
         {
-            var dealersModel = this.usersService.GetPendingDealers<PendingDealerViewModel>();
+            var dealersModel = this.usersService.GetPendingDealers<TableDealerViewModel>();
             return this.View(dealersModel);
         }
     }

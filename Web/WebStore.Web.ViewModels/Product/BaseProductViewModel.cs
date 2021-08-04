@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public abstract class BaseProductOutputModel
+    public class BaseProductViewModel
     {
         public int Id { get; set; }
 

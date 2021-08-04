@@ -18,7 +18,7 @@
 
 @if (this.SignInManager.IsSignedIn(this.User))
 {
-    @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || this.User.IsInRole(GlobalConstants.SellerRoleName))
+    @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || this.User.IsInRole(GlobalConstants.DealerRoleName))
     {
         <li class="nav-item dropdown">
             <a class="nav-link text-white mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Dashboard">

@@ -16,13 +16,13 @@
     public class DashboardController : AdministrationController
     {
         private readonly ISettingsService settingsService;
-        private readonly ISalesmanService salesmanService;
+        private readonly IDealerService salesmanService;
         private readonly IContactService contactService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public DashboardController(
             ISettingsService settingsService,
-            ISalesmanService salesmanService,
+            IDealerService salesmanService,
             IContactService contactService,
             UserManager<ApplicationUser> userManager)
         {

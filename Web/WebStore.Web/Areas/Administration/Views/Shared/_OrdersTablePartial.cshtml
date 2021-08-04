@@ -26,7 +26,7 @@
                 <td>@order.Name</td>
                 <td>$@order.Price</td>
                 <td>@order.Email</td>
-                <td>@order.CreatedOn.ToString("dd/MM/yyyy hh:mm:ss tt")</td>
+                <td>@order.CreatedOn.ToString("yyyy/MM/dd hh:mm:ss tt")</td>
                 <td>
                     <a asp-area="Administration" asp-controller="Orders"
                        asp-action="ById" asp-route-id="@order.SellerOrderId" class="btn btn-primary">

@@ -4,7 +4,7 @@
 }
 
 <h1>@Model.Name</h1>
-<p>@Model.Description</p>
+@Html.Raw(Model.SanitizedDescription)
 <hr />
 @if (this.Model.ChildCategories.Count > 0)
 {

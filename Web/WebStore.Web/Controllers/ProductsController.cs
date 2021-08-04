@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@
     using WebStore.Web.ViewModels.Product;
     using WebStore.Web.ViewModels.Reviews;
 
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
         private readonly ICategoriesService categoriesService;
         private readonly IProductsService productsService;
@@ -32,7 +33,10 @@
             this.userManager = userManager;
         }
 
-        // GET: Products
+        public IActionResult Index()
+        {
+            return this.RedirectToAction(nameof(this.All));
+        }
 
         public IActionResult All(int id = 1, string search = "")
         {
@@ -41,7 +45,7 @@
                 return this.NotFound();
             }
 
-            var products = this.productsService.GetAllForSinglePage<ProductInListViewModel>(
+            var products = this.productsService.AllForSinglePage<ProductInListViewModel>(
                 id, GlobalConstants.ProductsPerPage, search);
             var queryParams = new Dictionary<string, string>();
             queryParams.Add("search", search);
@@ -50,7 +54,7 @@
             {
                 ProductsPerPage = GlobalConstants.ProductsPerPage,
                 PageNumber = id,
-                ProductsCount = this.productsService.GetAll<ProductInListViewModel>(search).Count(),
+                ProductsCount = this.productsService.All<ProductInListViewModel>(search).Count(),
                 Products = products,
                 QueryParams = queryParams,
             };
@@ -65,7 +69,7 @@
                 return this.NotFound();
             }
 
-            var product = this.productsService.GetById<SingleProductOutputModel>((int)id);
+            var product = this.productsService.ById<SingleProductViewModel>((int)id);
             if (product == null)
             {
                 return this.NotFound();
@@ -92,7 +96,7 @@
                 return this.NotFound();
             }
 
-            var product = this.productsService.GetById<SingleProductOutputModel>((int)id);
+            var product = this.productsService.ById<SingleProductViewModel>((int)id);
             if (product == null)
             {
                 return this.NotFound();
@@ -108,12 +112,5 @@
 
             return this.RedirectToAction(nameof(this.ById), new { id = id });
         }
-
-        public IActionResult Index()
-        {
-            return this.RedirectToAction(nameof(this.All));
-        }
-
-
     }
 }

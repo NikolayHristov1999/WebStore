@@ -10,6 +10,7 @@
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
+    using WebStore.Web.ViewModels.Administration.Categories;
     using WebStore.Web.ViewModels.Categories;
     using WebStore.Web.ViewModels.Product;
 
@@ -23,40 +24,38 @@
             this.categoriesRepository = categoriesRepository;
         }
 
-        public async Task CreateAsync(CategoryInputModel input)
+        public async Task<int> CreateAsync(CategoryFormModel model)
         {
-            var category = new Category
+            var category = AutoMapperConfig.MapperInstance.Map<Category>(model);
+
+            var isValidated = int.TryParse(model.ParentCategoryId, out int categoryId);
+
+            if (isValidated && this.GetCategoryName(categoryId) != null)
             {
-                Description = input.Description,
-                Name = input.Name,
-                ImageUrl = input.ImageUrl,
-            };
-            if (input.CategoryId != null)
-            {
-                category.ParentCategoryId = int.Parse(input.CategoryId);
+                category.ParentCategoryId = categoryId;
             }
 
             await this.categoriesRepository.AddAsync(category);
             await this.categoriesRepository.SaveChangesAsync();
 
+            return category.Id;
         }
 
-        public async Task UpdateAsync(int id, EditCategoryInputModel inputModel)
+        public async Task UpdateAsync(
+            int id,
+            string name,
+            string description,
+            string imageUrl,
+            string parentCategoryId,
+            bool isDeleted)
         {
             var category = this.categoriesRepository.AllWithDeleted().FirstOrDefault(x => x.Id == id);
-            category.Name = inputModel.Name;
-            category.Description = inputModel.Description;
-            category.ImageUrl = inputModel.ImageUrl;
-            category.ModifiedOn = DateTime.UtcNow;
+            category.Name = name;
+            category.Description = description;
+            category.ImageUrl = imageUrl;
 
-            if (category.IsDeleted == false && inputModel.IsDeleted)
-            {
-                category.DeletedOn = DateTime.UtcNow;
-            }
+            var isValidated = int.TryParse(parentCategoryId, out int categoryId);
 
-            category.IsDeleted = inputModel.IsDeleted;
-
-            var isValidated = int.TryParse(inputModel.CategoryId, out int categoryId);
             if (isValidated && this.GetCategoryName(categoryId) != null)
             {
                 category.ParentCategoryId = categoryId;
@@ -66,9 +65,20 @@
                 category.ParentCategoryId = null;
             }
 
+            if (category.IsDeleted != isDeleted)
+            {
+                if (category.IsDeleted == false)
+                {
+                    this.categoriesRepository.Delete(category);
+                }
+                else
+                {
+                    category.IsDeleted = false;
+                }
+            }
+
             await this.categoriesRepository.SaveChangesAsync();
         }
-
 
         public EditCategoryInputModel GetProductEditModelById(int id)
         {
@@ -100,18 +110,32 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.categoriesRepository.AllAsNoTracking().To<T>();
+            return this.categoriesRepository.All()
+                .To<T>();
         }
 
         public IEnumerable<T> GetAllWithDeleted<T>()
         {
-            return this.categoriesRepository.AllAsNoTrackingWithDeleted().To<T>();
+            return this.categoriesRepository.AllAsNoTrackingWithDeleted()
+                .To<T>();
         }
 
         public T GetById<T>(int id)
         {
-            var category = this.categoriesRepository.All().Where(x => id == x.Id)
-                .To<T>().FirstOrDefault();
+            var category = this.categoriesRepository.All()
+                .Where(x => id == x.Id)
+                .To<T>()
+                .FirstOrDefault();
+
+            return category;
+        }
+
+        public T ByIdWithDeleted<T>(int id)
+        {
+            var category = this.categoriesRepository.AllWithDeleted()
+                .Where(x => id == x.Id)
+                .To<T>()
+                .FirstOrDefault();
 
             return category;
         }

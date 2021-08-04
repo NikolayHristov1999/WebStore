@@ -1,4 +1,0 @@
-﻿namespace WebStore.Data.Common
-{
-    
-}

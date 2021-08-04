@@ -82,7 +82,7 @@
             services.AddTransient<ICategoriesProductsService, CategoriesProductsService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
             services.AddTransient<IImageProcessingService, ImageProcessingService>();
-            services.AddTransient<ISalesmanService, SalesmanService>();
+            services.AddTransient<IDealerService, DealerService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IOrdersService, OrdersService>();
             services.AddTransient<IFilesService, FilesService>();

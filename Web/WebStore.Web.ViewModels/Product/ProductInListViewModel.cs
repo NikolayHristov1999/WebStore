@@ -5,7 +5,7 @@
     using WebStore.Data.Models;
     using WebStore.Services.Mapping;
 
-    public class ProductInListViewModel : BaseProductOutputModel, IMapFrom<Product>, IHaveCustomMappings
+    public class ProductInListViewModel : BaseProductViewModel, IMapFrom<Product>, IHaveCustomMappings
     {
         public void CreateMappings(IProfileExpression configuration)
         {

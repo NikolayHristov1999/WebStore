@@ -13,10 +13,14 @@
     public class CategoriesProductsService : ICategoriesProductsService
     {
         private readonly IRepository<CategoryProduct> categoryProductRepository;
+        private readonly ICategoriesService categoriesService;
 
-        public CategoriesProductsService(IRepository<CategoryProduct> categoryProductRepository)
+        public CategoriesProductsService(
+            IRepository<CategoryProduct> categoryProductRepository,
+            ICategoriesService categoriesService)
         {
             this.categoryProductRepository = categoryProductRepository;
+            this.categoriesService = categoriesService;
         }
 
         public async Task RemoveAllByProductId(int id)
@@ -28,7 +32,23 @@
             {
                 this.categoryProductRepository.Delete(productCategory);
             }
+
             await this.categoryProductRepository.SaveChangesAsync();
+        }
+
+        public async Task AddAsync(int productId, int categoryId)
+        {
+            if (this.categoriesService.GetCategoryName(categoryId) != null)
+            {
+                var categoryProduct = new CategoryProduct
+                {
+                    CategoryId = categoryId,
+                    ProductId = productId,
+                };
+
+                await this.categoryProductRepository.AddAsync(categoryProduct);
+                await this.categoryProductRepository.SaveChangesAsync();
+            }
         }
     }
 }

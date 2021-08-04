@@ -17,11 +17,15 @@
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            await SeedAdminUserAsync(userManager, GlobalConstants.DefaultAdminUserName);
-            await SeedSellerUserAsync(userManager, GlobalConstants.DemoSellerEmail);
+            await SeedUserAsync(userManager, GlobalConstants.DefaultAdminUserName, GlobalConstants.AdministratorRoleName);
+            await SeedUserAsync(userManager, GlobalConstants.DemoDealerUser, GlobalConstants.DealerRoleName);
+            await SeedUserAsync(userManager, GlobalConstants.DemoClientName);
         }
 
-        private static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager, string userName)
+        private static async Task SeedUserAsync(
+            UserManager<ApplicationUser> userManager,
+            string userName,
+            string roleName = null)
         {
             var user = await userManager.FindByNameAsync(userName);
             if (user == null)
@@ -35,27 +39,7 @@
 
                 user = await userManager.FindByNameAsync(userName);
 
-                await userManager.SetEmailAsync(user, userName);
-
-                await AddUserToAdminAsync(userManager, userName);
-
-                result = await userManager.AddPasswordAsync(user, "Admin123");
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                }
-
-            }
-
-        }
-
-        private static async Task SeedSellerUserAsync(UserManager<ApplicationUser> userManager, string userName)
-        {
-            var user = await userManager.FindByNameAsync(userName);
-            if (user == null)
-            {
-                var result = await userManager.CreateAsync(new ApplicationUser(userName));
+                result = await userManager.AddPasswordAsync(user, GlobalConstants.DemoPassword);
 
                 if (!result.Succeeded)
                 {
@@ -66,45 +50,14 @@
 
                 await userManager.SetEmailAsync(user, userName);
 
-                await AddUserToSellerAsync(userManager, userName);
-
-                result = await userManager.AddPasswordAsync(user, "Seller123");
-
-                if (!result.Succeeded)
+                if (roleName != null)
                 {
-                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                }
+                    result = await userManager.AddToRoleAsync(user, roleName);
 
-            }
-
-        }
-
-        private static async Task AddUserToAdminAsync(UserManager<ApplicationUser> userManager, string userName)
-        {
-            var user = await userManager.FindByNameAsync(userName);
-
-            if (user != null)
-            {
-                var result = await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                }
-            }
-        }
-
-        private static async Task AddUserToSellerAsync(UserManager<ApplicationUser> userManager, string userName)
-        {
-            var user = await userManager.FindByNameAsync(userName);
-
-            if (user != null)
-            {
-                var result = await userManager.AddToRoleAsync(user, GlobalConstants.SellerRoleName);
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
+                    }
                 }
             }
         }

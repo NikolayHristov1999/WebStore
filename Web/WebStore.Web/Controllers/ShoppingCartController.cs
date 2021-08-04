@@ -13,7 +13,7 @@
     using WebStore.Web.ViewModels.ShoppingCart;
 
 
-    public class ShoppingCartController : Controller
+    public class ShoppingCartController : BaseController
     {
         private readonly IShoppingCartService shoppingCartService;
         private readonly IEmailSender emailSender;

@@ -9,5 +9,6 @@
     {
         Task RemoveAllByProductId(int id);
 
+        Task AddAsync(int productId, int categoryId);
     }
 }

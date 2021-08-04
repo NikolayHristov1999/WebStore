@@ -5,6 +5,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using WebStore.Data.Models;
+    using WebStore.Web.ViewModels.Administration.Categories;
     using WebStore.Web.ViewModels.Categories;
 
     public interface ICategoriesService
@@ -13,9 +14,15 @@
 
         EditCategoryInputModel GetProductEditModelById(int id);
 
-        Task UpdateAsync(int id, EditCategoryInputModel inputModel);
+        Task UpdateAsync(
+            int id,
+            string name,
+            string description,
+            string imageUrl,
+            string parentCategoryId,
+            bool isDeleted);
 
-        Task CreateAsync(CategoryInputModel input);
+        Task<int> CreateAsync(CategoryFormModel input);
 
         string GetCategoryName(int id);
 
@@ -26,6 +33,8 @@
         IEnumerable<T> GetAllRootCategories<T>();
 
         T GetById<T>(int id);
+
+        T ByIdWithDeleted<T>(int id);
 
         IEnumerable<CategorySidebarViewModel> GetAllMainCategoriesInfo();
 

@@ -35,7 +35,7 @@
 
         public IActionResult Create()
         {
-            var model = new CreateProductViewModel
+            var model = new CreateProductFormModel
             {
                 AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs(),
             };
@@ -45,7 +45,7 @@
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Create(CreateProductViewModel model)
+        public async Task<IActionResult> Create(CreateProductFormModel model)
         {
             if (!this.ModelState.IsValid)
             {
@@ -61,14 +61,15 @@
         public IActionResult ById(int? id)
         {
             var userId = this.User.GetId();
-            var model = this.productsService.GetEditProductModelById((int)id);
+            var model = this.productsService.ByIdWithDeleted<EditProductViewModel>((int)id);
+            model.AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs();
 
             if (model == null)
             {
                 return this.NotFound();
             }
 
-            if (userId != this.productsService.GetProductById((int)id).AddedByUserId)
+            if (!this.productsService.IsUserOwner(userId, (int)id))
             {
                 return this.Unauthorized();
             }
@@ -82,13 +83,13 @@
         {
             var userId = this.User.GetId();
 
-            var currentProductState = this.productsService.GetProductById((int)id);
+            var currentProductState = this.productsService.ByIdWithDeleted<EditProductViewModel>((int)id);
             if (currentProductState == null)
             {
                 return this.NotFound();
             }
 
-            if (userId != currentProductState.AddedByUserId)
+            if (!this.productsService.IsUserOwner(userId, (int)id))
             {
                 return this.Unauthorized();
             }

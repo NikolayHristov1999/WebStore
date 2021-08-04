@@ -7,30 +7,32 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
+    using WebStore.Common;
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
     using WebStore.Services.Mapping;
 
-    public class SalesmanService : ISalesmanService
+    using static WebStore.Data.Common.DataConstants;
+
+    public class DealerService : IDealerService
     {
         private readonly IDeletableEntityRepository<Dealer> dealerRepository;
         private readonly IDeletableEntityRepository<Item> itemRepository;
         private readonly IDeletableEntityRepository<SellerOrder> sellerOrderRepository;
+        private readonly IUsersService usersService;
 
-        public SalesmanService(
+        public DealerService(
             IDeletableEntityRepository<Dealer> dealerRepository,
             IDeletableEntityRepository<Item> itemRepository,
-            IDeletableEntityRepository<SellerOrder> sellerOrderRepository)
+            IDeletableEntityRepository<SellerOrder> sellerOrderRepository,
+            IUsersService usersService,
+            UserManager<ApplicationUser> userManager)
         {
             this.dealerRepository = dealerRepository;
             this.itemRepository = itemRepository;
             this.sellerOrderRepository = sellerOrderRepository;
-        }
-
-        public Task AddUserToRole(UserManager<ApplicationUser> user, string role)
-        {
-            throw new NotImplementedException();
+            this.usersService = usersService;
         }
 
         public IEnumerable<Item> GetAllPurchasedItemsForSeller(string userId)
@@ -66,6 +68,51 @@
                 .Where(x => x.UserId == userId)
                 .To<T>()
                 .FirstOrDefault();
+        }
+
+        public IEnumerable<T> GetAllDealers<T>()
+        {
+            return this.dealerRepository.All()
+                .To<T>()
+                .ToList();
+        }
+
+        public bool IsDealerApproved(string userId)
+        {
+            return this.dealerRepository.All()
+                .Where(x => x.UserId == userId)
+                .FirstOrDefault()
+                .Status.Equals(DealerStatus.Approved.ToString());
+        }
+
+        public async Task<bool> ChangeDealerStatusAsync(string userId, string statusInput)
+        {
+            var isValidStatus = Enum.TryParse(typeof(DealerStatus), statusInput, true, out var status);
+
+            if (!isValidStatus)
+            {
+                return false;
+            }
+
+            var dealer = this.dealerRepository.All()
+                .Where(x => x.UserId == userId)
+                .FirstOrDefault();
+
+            if (dealer == null)
+            {
+                return false;
+            }
+
+            dealer.Status = statusInput;
+
+            await this.dealerRepository.SaveChangesAsync();
+
+            if (statusInput == DealerStatus.Approved.ToString())
+            {
+                await this.usersService.AddUserToRoleAsync(userId, GlobalConstants.DealerRoleName);
+            }
+
+            return true;
         }
     }
 }

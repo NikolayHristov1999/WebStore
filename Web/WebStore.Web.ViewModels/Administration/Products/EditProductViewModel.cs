@@ -3,13 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
+    using System.Linq;
 
+    using AutoMapper;
     using AutoMapper.Configuration.Annotations;
-    using WebStore.Services.Mapping;
     using WebStore.Data.Models;
+    using WebStore.Services.Mapping;
 
-    public class EditProductViewModel : IMapFrom<Product>, IMapTo<Product>
+    public class EditProductViewModel : IMapFrom<Product>, IMapTo<Product>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -34,18 +35,6 @@
         [Display(Name = "Quantity")]
         public int AvailableQuantity { get; set; }
 
-        [Display(Name = "First Category")]
-        [Ignore]
-        public string FirstCategory { get; set; }
-
-        [Display(Name = "Second Category")]
-        [Ignore]
-        public string SecondCategory { get; set; }
-
-        [Display(Name = "Third Category")]
-        [Ignore]
-        public string ThirdCategory { get; set; }
-
         [Display(Name = "Made in")]
         public string MadeIn { get; set; }
 
@@ -55,7 +44,16 @@
         [Display(Name = "Deleted")]
         public bool IsDeleted { get; set; }
 
+        [Display(Name = "Category")]
+        public IList<int?> CategoriesId { get; set; } = new List<int?>();
+
         [Ignore]
         public IEnumerable<KeyValuePair<string, string>> AllCategories { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Product, EditProductViewModel>()
+                .ForMember(x => x.CategoriesId, opt => opt.MapFrom(y => y.Categories.Select(pc => (int?)pc.CategoryId)));
+        }
     }
 }

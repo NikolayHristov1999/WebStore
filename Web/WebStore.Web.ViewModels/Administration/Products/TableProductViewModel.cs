@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Text;
 
-    using WebStore.Services.Mapping;
     using WebStore.Data.Models;
+    using WebStore.Services.Mapping;
 
     public class TableProductViewModel : IMapFrom<Product>
     {

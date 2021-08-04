@@ -11,18 +11,19 @@
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Administration.Orders;
     using WebStore.Web.ViewModels.Contact;
+    using WebStore.Web.ViewModels.Product;
 
     public class OrdersController : AdministrationController
     {
         private readonly IOrdersService ordersService;
-        private readonly ISalesmanService salesmanService;
+        private readonly IDealerService salesmanService;
         private readonly IContactService contactService;
         private readonly IProductsService productsService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public OrdersController(
             IOrdersService ordersService,
-            ISalesmanService salesmanService,
+            IDealerService salesmanService,
             IContactService contactService,
             IProductsService productsService,
             UserManager<ApplicationUser> userManager)
@@ -79,7 +80,7 @@
                     TotalPrice = item.ItemTotalPrice,
                     Quantity = item.Quantity,
                     ProductId = item.ProductId,
-                    ProductName = this.productsService.GetProductById(item.ProductId).Name,
+                    ProductName = this.productsService.ById<BaseProductViewModel>(item.ProductId).Name,
                 });
             }
 

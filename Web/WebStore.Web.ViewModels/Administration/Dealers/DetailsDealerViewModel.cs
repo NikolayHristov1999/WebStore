@@ -1,7 +1,8 @@
 ﻿namespace WebStore.Web.ViewModels.Administration.Dealers
 {
     using System.Collections.Generic;
-
+    using System.ComponentModel.DataAnnotations;
+    using AutoMapper;
     using AutoMapper.Configuration.Annotations;
     using WebStore.Data.Models;
     using WebStore.Services.Mapping;
@@ -12,9 +13,12 @@
     {
         public ContactViewModel Contact { get; set; }
 
+        [Required]
+        [Display(Name = "Dealer Status")]
         public string Status { get; set; }
 
         [Ignore]
         public ICollection<TableOrderViewModel> DealersSales { get; set; }
+
     }
 }

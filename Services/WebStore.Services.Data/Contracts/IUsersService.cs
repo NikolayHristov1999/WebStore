@@ -7,10 +7,12 @@
 
     public interface IUsersService
     {
-        Task<string> BecomeDealerAsync(string userId, ContactFormModel model);
+        Task<string> BecomeDealerAsync(string userId, ContactDealerFormModel model);
 
         bool IsDealer(string userId);
 
         IEnumerable<T> GetPendingDealers<T>();
+
+        Task AddUserToRoleAsync(string userId, string role);
     }
 }

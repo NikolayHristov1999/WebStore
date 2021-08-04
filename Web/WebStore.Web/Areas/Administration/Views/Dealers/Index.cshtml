@@ -2,7 +2,7 @@
 @model IEnumerable<TableDealerViewModel>
 
 @{
-    ViewData["Title"] = "Pending Dealers";
+    ViewData["Title"] = "Dealers";
 }
 
 
@@ -30,19 +30,19 @@
             <tbody>
                 @foreach (var dealer in Model)
                 {
-                <tr>
-                    <td class="text-break text-wrap">
-                        @dealer.Name
-                    </td>
-                    <td class="text-break text-wrap">@dealer.Email</td>
-                    <td class="text-break text-wrap">@dealer.Status</td>
-                    <td class="text-break text-wrap">@Html.DisplayFor(modelItem => dealer.CreatedOn)</td>
-                    <td class="text-center">
-                        <a asp-action="Details" asp-route-id="@dealer.UserId" class="btn btn-primary">
-                            Select
-                        </a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td class="text-break text-wrap">
+                            @dealer.Name
+                        </td>
+                        <td class="text-break text-wrap">@dealer.Email</td>
+                        <td class="text-break text-wrap">@dealer.Status</td>
+                        <td class="text-break text-wrap">@Html.DisplayFor(modelItem => dealer.CreatedOn)</td>
+                        <td class="text-center">
+                            <a asp-action="Details" asp-route-id="@dealer.UserId" class="btn btn-primary">
+                                Select
+                            </a>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>

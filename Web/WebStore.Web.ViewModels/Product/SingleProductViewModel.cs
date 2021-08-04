@@ -12,7 +12,7 @@
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.Reviews;
 
-    public class SingleProductOutputModel : BaseProductOutputModel, IMapFrom<Product>, IHaveCustomMappings
+    public class SingleProductViewModel : BaseProductViewModel, IMapFrom<Product>, IHaveCustomMappings
     {
         [Display(Name = "Short description")]
         public string ShortDescription { get; set; }
@@ -47,7 +47,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Product, SingleProductOutputModel>()
+            configuration.CreateMap<Product, SingleProductViewModel>()
                 .ForMember(x => x.AddedByUserName, opt => opt.MapFrom(x => x.AddedByUser.UserName ?? x.AddedByUser.Email))
                 .ForMember(x => x.Category, opt => opt.MapFrom(x => x.Categories.FirstOrDefault().Category.Name));
         }
