@@ -43,12 +43,14 @@
 
         T ByIdWithDeleted<T>(int id);
 
-        bool IsUserOwner(string userId, int productId);
-
         Product GetProductById(int id);
 
         Task DeleteProductById(int id);
 
         Task IncreaseViewsNumberAsync(int id);
+
+        bool IsUserOwner(string userId, int productId);
+
+        string GetProductDealerId(int productId);
     }
 }

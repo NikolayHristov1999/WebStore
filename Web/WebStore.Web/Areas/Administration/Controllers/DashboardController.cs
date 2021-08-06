@@ -6,61 +6,36 @@
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using WebStore.Data;
     using WebStore.Data.Models;
-    using WebStore.Services.Data;
     using WebStore.Services.Data.Contracts;
+    using WebStore.Web.Infrastructure.Extensions;
     using WebStore.Web.ViewModels.Administration.Dashboard;
     using WebStore.Web.ViewModels.Administration.Orders;
 
     public class DashboardController : AdministrationController
     {
-        private readonly ISettingsService settingsService;
-        private readonly IDealerService salesmanService;
-        private readonly IContactService contactService;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IDealerService dealerService;
 
         public DashboardController(
-            ISettingsService settingsService,
-            IDealerService salesmanService,
-            IContactService contactService,
-            UserManager<ApplicationUser> userManager)
+            IDealerService dealerService)
         {
-            this.settingsService = settingsService;
-            this.salesmanService = salesmanService;
-            this.contactService = contactService;
-            this.userManager = userManager;
+            this.dealerService = dealerService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var user = await this.userManager.GetUserAsync(this.User);
-            var orders = this.salesmanService.GetAllOrdersForSeller(user.Id)
+            var userId = this.User.GetId();
+            var orders = this.dealerService.GetAllOrdersForSeller<TableOrderViewModel>(userId)
                 .OrderByDescending(x => x.CreatedOn);
-            var tableOrderModel = new List<TableOrderViewModel>();
-
-            foreach (var order in orders)
-            {
-                var contact = this.contactService.GetContactById(order.ContactId);
-                tableOrderModel.Add(new TableOrderViewModel
-                {
-                    SellerOrderId = order.Id,
-                    Name = contact.FirstName + " " + contact.LastName,
-                    Price = order.TotalPrice.ToString("f2"),
-                    Email = contact.Email,
-                    CreatedOn = order.CreatedOn,
-                });
-            }
 
             var viewModel = new IndexViewModel
             {
-                SettingsCount = this.settingsService.GetCount(),
-                TotalOrders = orders.Count(),
                 TotalSalesUsd = orders.Sum(x => x.TotalPrice),
+                AverageRatingFromUsers = this.dealerService.GetAverageRatingFromUsers(userId).ToString("f1"),
                 TotalCustomers = orders.Where(x => x.BuyerId != null)
                             .GroupBy(x => x.BuyerId).Select(g => g.First()).Count() + orders
                             .Where(x => x.BuyerId == null).Count(),
-                Orders = tableOrderModel,
+                Orders = orders,
             };
 
             return this.View(viewModel);

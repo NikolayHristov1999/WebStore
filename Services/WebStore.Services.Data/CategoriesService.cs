@@ -80,34 +80,6 @@
             await this.categoriesRepository.SaveChangesAsync();
         }
 
-        public EditCategoryInputModel GetProductEditModelById(int id)
-        {
-            var category = this.GetCategoryById(id);
-
-            if (category == null)
-            {
-                return null;
-            }
-
-            var model = new EditCategoryInputModel
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description,
-                ImageUrl = category.ImageUrl,
-                IsDeleted = category.IsDeleted,
-                Categories = this.GetCategoriesAsKeyValuePairs(id),
-            };
-
-            int? categoryId = category.ParentCategoryId;
-            if (categoryId != null)
-            {
-                model.CategoryId = categoryId.ToString();
-            }
-
-            return model;
-        }
-
         public IEnumerable<T> GetAll<T>()
         {
             return this.categoriesRepository.All()

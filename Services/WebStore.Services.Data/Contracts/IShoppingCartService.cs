@@ -12,9 +12,7 @@ namespace WebStore.Services.Data.Contracts
         Task<T> AddToCartAsync<T>(string cartId, int productId, int quantity)
             where T : class;
 
-        Task AddItemToCartAsync(string cartId, Item item);
-
-        bool CheckQuantity(int productId, int quantity);
+        Task UpdateCartTotalPriceAsync(string cartId, decimal itemPrice);
 
         Task<string> CreateCartAsync(string userId = null);
 
@@ -22,7 +20,7 @@ namespace WebStore.Services.Data.Contracts
 
         Task<bool> RemoveItemFromCartAsync(string itemId, string cartId);
 
-        Task<bool> CreateOrderAsync(CheckoutInputModel model, string cartId, string userId);
+        Task<bool> CreateOrderAsync(CheckoutFormModel model, string cartId, string userId);
 
         int GetCartItemsCount(string cartId);
     }

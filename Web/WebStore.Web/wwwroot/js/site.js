@@ -95,7 +95,7 @@ function addToCartWithQuantity(id) {
     }
 }
 
-function drawChart(info) {
+function drawAreaChart(info, chartId) {
     var obj = JSON.parse(info);
     console.log(obj);
     var xValues = obj.days;
@@ -114,6 +114,7 @@ function drawChart(info) {
 
     const config = {
         type: 'line',
+        responsive: true,
         data: data,
         options: {
             plugins: {
@@ -128,7 +129,50 @@ function drawChart(info) {
     };
 
     var myChart = new Chart(
-        document.getElementById('myChart'),
+        document.getElementById(chartId),
+        config
+    );
+}
+
+function drawBarChart(info, chartId) {
+    var obj = JSON.parse(info);
+    console.log(obj);
+    var xValues = obj.days;
+    var yValues = obj.sales;
+
+    const data = {
+        labels: xValues,
+        datasets: [{
+            fill: false,
+            label: 'Sales',
+            backgroundColor: '#3399FF',
+            borderColor: '#3399FF',
+            data: yValues,
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        responsive: true,
+        options: {
+            plugins: {
+                filler: {
+                    propagate: false,
+                },
+            },
+            interaction: {
+                intersect: false,
+            },
+            title: {
+                display: true,
+                text: 'Sales'
+            }
+        },
+    };
+
+    var myChart = new Chart(
+        document.getElementById(chartId),
         config
     );
 }

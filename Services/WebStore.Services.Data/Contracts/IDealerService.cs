@@ -1,5 +1,6 @@
 ﻿namespace WebStore.Services.Data.Contracts
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -10,9 +11,9 @@
     {
         IEnumerable<Item> GetAllPurchasedItemsForSeller(string userId);
 
-        IEnumerable<SellerOrder> GetAllOrdersForSeller(string userId);
+        IEnumerable<T> GetAllOrdersForSeller<T>(string userId);
 
-        SellerOrder GetOrderForSellerById(string orderId);
+        T SellerOrderById<T>(string orderId);
 
         IEnumerable<Item> GetAllItemsBySellerOrderId(string sellerOrderId);
 
@@ -24,5 +25,12 @@
 
         IEnumerable<T> GetAllDealers<T>();
 
+        IEnumerable<T> AllOrdersForSellerInLastDays<T>(string userId, int days);
+
+        int CountOfSalesForADay(string userId, DateTime day);
+
+        decimal SumOfSalesForADay(string userId, DateTime day);
+
+        double GetAverageRatingFromUsers(string userId);
     }
 }

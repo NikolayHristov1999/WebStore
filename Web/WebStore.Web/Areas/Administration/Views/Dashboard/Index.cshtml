@@ -18,8 +18,8 @@
                     <div class="card-body px-4 h1 col-8 text-end">@Model.TotalOrders</div>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a asp-area="Administration" asp-controller="Orders" asp-action="Index" 
-                       class="small text-white stretched-link" >View Details</a>
+                    <a asp-area="Administration" asp-controller="Orders" asp-action="Index"
+                       class="small text-white stretched-link">View Details</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                 <div class="card-header d-flex">Average Rating From Users</div>
                 <div class="row align-items-center ">
                     <i class="fas fa-star p-4 col-4 h3"></i>
-                    <div class="card-body px-4 h1 col-8 text-end">0</div>
+                    <div class="card-body px-4 h1 col-8 text-end">@Model.AverageRatingFromUsers</div>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
                     <a class="small text-white stretched-link" href="#">View Details</a>
@@ -74,7 +74,7 @@
                     <i class="fas fa-chart-area me-1"></i>
                     Area Chart Example
                 </div>
-                <div class="card-body"><canvas id="myChart" width="100%" height="40"></canvas></div>
+                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
             </div>
         </div>
         <div class="col-xl-6">
@@ -109,13 +109,20 @@
     </script>
     <script>
         $.ajax({
-            url: '/Administration/Orders/LastTwoWeekSales',
+            url: '/Administration/Orders/LastDaysSalesCount?lastDays=14',
             dataType: "text",
             success: function (dataReturned) {
-                drawChart(dataReturned);
-
+                drawAreaChart(dataReturned, "myAreaChart");
             }
         });
-        
+    </script>
+    <script>
+        $.ajax({
+            url: '/Administration/Orders/LastDaysSalesAmount?lastDays=14',
+            dataType: "text",
+            success: function (dataReturned) {
+                drawBarChart(dataReturned, "myBarChart");
+            }
+        });
     </script>
 }

@@ -7,7 +7,7 @@
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.Contact;
 
-    public class CheckoutInputModel : IMapTo<Order>
+    public class CheckoutFormModel : IMapTo<Order>
     {
         [Required]
         public ContactFormModel Contact { get; set; }

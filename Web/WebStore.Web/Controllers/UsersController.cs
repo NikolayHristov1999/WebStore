@@ -5,10 +5,13 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using WebStore.Data.Common;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.Infrastructure.Extensions;
     using WebStore.Web.ViewModels.Contact;
+
+    using static WebStore.Data.Common.MessageConstants;
 
     [Authorize]
     public class UsersController : BaseController
@@ -33,7 +36,7 @@
         {
             if (this.usersService.IsDealer(this.User.GetId()))
             {
-                this.TempData["Message"] = "We have your dealer submission already.";
+                this.TempData["Message"] = InformationMessages.DealerMessageAlreadyRecieved;
                 return this.RedirectToAction("Index", "Home");
             }
 
@@ -49,7 +52,7 @@
 
             if (this.usersService.IsDealer(user.Id))
             {
-                this.TempData["Message"] = "We have your dealer submission already.";
+                this.TempData["Message"] = InformationMessages.DealerMessageAlreadyRecieved;
                 return this.RedirectToAction("Index", "Home");
             }
 
@@ -60,7 +63,7 @@
 
             await this.usersService.BecomeDealerAsync(this.User.GetId(), model);
 
-            this.TempData["Message"] = "We recieved your request successfuly. We need time to process it.";
+            this.TempData["Message"] = SuccessfulMessages.DealerRequestRecieved;
             return this.RedirectToAction("Index", "Home");
         }
     }

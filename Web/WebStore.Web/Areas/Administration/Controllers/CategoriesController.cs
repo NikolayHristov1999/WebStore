@@ -1,8 +1,9 @@
 ﻿namespace WebStore.Web.Areas.Administration.Controllers
 {
+    using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
     using WebStore.Common;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Administration.Categories;
@@ -26,8 +27,11 @@
 
         public IActionResult Create()
         {
-            var model = new CategoryFormModel();
-            model.AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs();
+            var model = new CategoryFormModel
+            {
+                AllCategories = this.categoriesService.GetCategoriesAsKeyValuePairs(),
+            };
+
             return this.View(model);
         }
 

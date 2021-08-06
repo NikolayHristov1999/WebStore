@@ -12,8 +12,6 @@
     {
         public IEnumerable<KeyValuePair<string, string>> GetCategoriesAsKeyValuePairs(int categoryId = 0);
 
-        EditCategoryInputModel GetProductEditModelById(int id);
-
         Task UpdateAsync(
             int id,
             string name,

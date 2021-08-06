@@ -44,12 +44,17 @@
                 return null;
             }
 
+            // If there is not enough quantity or the product is not available return null.
+            if (quantity > product.AvailableQuantity)
+            {
+                return null;
+            }
+
             var item = this.itemRepository.All()
                 .FirstOrDefault(x => x.CartId == cartId && x.ProductId == productId);
 
             if (item == null)
             {
-
                 item = new Item
                 {
                     ProductId = productId,
@@ -68,43 +73,23 @@
 
             await this.itemRepository.SaveChangesAsync();
 
-            await this.AddItemToCartAsync(cartId, item);
-
-            item.Product = product;
+            await this.UpdateCartTotalPriceAsync(cartId, item.ItemTotalPrice);
 
             return AutoMapperConfig.MapperInstance.Map<T>(item);
         }
 
-        public bool CheckQuantity(int productId, int quantity)
-        {
-            var product = this.productsService.GetProductById(productId);
-
-            if (product == null)
-            {
-                return false;
-            }
-
-            if (!(product.AvailableQuantity >= quantity))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task AddItemToCartAsync(string cartId, Item item)
+        public async Task UpdateCartTotalPriceAsync(string cartId, decimal itemPrice)
         {
             var cart = this.cartRepository.All().FirstOrDefault(x => x.Id == cartId);
-            cart.TotalPrice += item.ItemTotalPrice;
-            cart.Items.Add(item);
+            if (cart == null)
+            {
+                return;
+            }
+
+            cart.TotalPrice += itemPrice;
 
             await this.cartRepository.SaveChangesAsync();
         }
-
-        public TCart GetCartById<TCart>(string id)
-            => this.cartRepository.All()
-            .Where(x => x.Id == id)
-            .To<TCart>().FirstOrDefault();
 
         public async Task<string> CreateCartAsync(string userId = null)
         {
@@ -125,8 +110,7 @@
         {
             return this.itemRepository.AllAsNoTracking()
                 .Where(x => x.CartId == cartId)
-                .To<T>()
-                .ToList();
+                .To<T>();
         }
 
         public int GetCartItemsCount(string cartId)
@@ -149,12 +133,10 @@
             this.itemRepository.Delete(item);
             await this.itemRepository.SaveChangesAsync();
 
-            // await this.cartRepository.SaveChangesAsync();
             return true;
-
         }
 
-        public async Task<bool> CreateOrderAsync(CheckoutInputModel model, string cartId, string userId = null)
+        public async Task<bool> CreateOrderAsync(CheckoutFormModel model, string cartId, string userId = null)
         {
             var sellerOrders = new Dictionary<string, SellerOrder>();
             var order = AutoMapperConfig.MapperInstance.Map<Order>(model);
@@ -174,7 +156,7 @@
 
             foreach (var item in items)
             {
-                var seller = this.productsService.GetProductById(item.ProductId).AddedByUserId;
+                var seller = this.productsService.GetProductDealerId(item.ProductId);
                 if (!sellerOrders.ContainsKey(seller))
                 {
                     var sellerOrderTmp = new SellerOrder

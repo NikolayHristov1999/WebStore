@@ -1,4 +1,4 @@
-﻿@model WebStore.Web.ViewModels.Administration.Orders.OrderViewModel 
+﻿@model WebStore.Web.ViewModels.Administration.Orders.DetailsOrderViewModel 
 @{
     this.ViewData["Title"] = "Order - " + this.Model.Id;
 }
@@ -21,13 +21,13 @@
                 Details for Client
             </div>
             <div class="card-body">
-                <p class="card-text"><i class="fas fa-user"></i> - @Model.ContactInfo.ClientName</p>
+                <p class="card-text"><i class="fas fa-user"></i> - @Model.Contact.ClientName</p>
                 <hr />
-                <p class="card-text"><i class="fas fa-envelope"></i> - @Model.ContactInfo.Email</p>
+                <p class="card-text"><i class="fas fa-envelope"></i> - @Model.Contact.Email</p>
                 <hr />
-                <p class="card-text"><i class="fas fa-globe"></i> - @Model.ContactInfo.Country</p>
+                <p class="card-text"><i class="fas fa-globe"></i> - @Model.Contact.Country</p>
                 <hr />
-                <p class="card-text"><i class="fas fa-street-view"></i> - @Model.ContactInfo.ShippingStreet @Model.ContactInfo.Address</p>
+                <p class="card-text"><i class="fas fa-street-view"></i> - @Model.Contact.ShippingStreet @Model.Contact.Address</p>
 
             </div>
         </div>
@@ -62,7 +62,7 @@
                         <tr>
                             <td>@item.ProductName</td>
                             <td>@item.Quantity</td>
-                            <td>@item.TotalPrice</td>
+                            <td>@item.ItemTotalPrice</td>
                         </tr>
                     }
                 </tbody>

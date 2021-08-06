@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using WebStore.Data.Common.Repositories;
     using WebStore.Data.Models;
     using WebStore.Services.Data.Contracts;
@@ -21,7 +22,6 @@
             return this.ordersRepository.All()
                 .ToList();
         }
-
 
         public IEnumerable<Order> GetAllOrdersForUser(string userId)
         {

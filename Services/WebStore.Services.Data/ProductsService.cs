@@ -211,12 +211,6 @@
             await this.productsRepository.SaveChangesAsync();
         }
 
-        public bool IsUserOwner(string userId, int productId)
-        {
-            return this.productsRepository.AllAsNoTrackingWithDeleted()
-                .Any(x => x.AddedByUserId == userId && x.Id == productId);
-        }
-
         public IEnumerable<T> GetAllForSeller<T>(string userId)
         {
             return this.productsRepository.AllWithDeleted()
@@ -231,6 +225,25 @@
         {
             return this.productsRepository.AllWithDeleted()
                 .FirstOrDefault(x => x.Id == id);
+        }
+
+        public bool IsUserOwner(string userId, int productId)
+        {
+            return this.productsRepository.AllAsNoTrackingWithDeleted()
+                .Any(x => x.AddedByUserId == userId && x.Id == productId);
+        }
+
+        public string GetProductDealerId(int productId)
+        {
+            var product = this.productsRepository.All()
+                .FirstOrDefault(x => x.Id == productId);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            return product.AddedByUserId;
         }
     }
 }

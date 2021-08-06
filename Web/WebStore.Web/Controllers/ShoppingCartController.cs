@@ -29,40 +29,23 @@
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
-        {
-            return this.View();
-        }
-
         [HttpPost]
-        [Route("/[controller]/AddCartItem")]
         public async Task<IActionResult> AddCartItem([FromBody]ItemCartInputModel item)
         {
-            if (!this.shoppingCartService.CheckQuantity(item.ProductId, item.Quantity))
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = GlobalConstants.NotEnoughQuantity,
-                });
-            }
-
             var cartId = await this.GetUserCartId();
 
             var itemInCart = await this.shoppingCartService
                 .AddToCartAsync<ItemInCartViewModel>(cartId, item.ProductId, item.Quantity);
             if (itemInCart == null)
             {
-                return Json(new
+                return this.Json(new
                 {
                     success = false,
-                    message = "Something went wrong while adding the product",
+                    message = GlobalConstants.UnavailableProductOrNotEnoughQuantity,
                 });
             }
 
             return this.PartialView(itemInCart);
-
-            // return Json(new { success = true });
         }
 
         public async Task<IActionResult> GetCartItems()
@@ -125,7 +108,7 @@
                 Items = cartItems,
             };
 
-            var checkoutCart = new CheckoutInputModel
+            var checkoutCart = new CheckoutFormModel
             {
                 CartItems = cart,
             };
@@ -134,7 +117,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Checkout(CheckoutInputModel model)
+        public async Task<IActionResult> Checkout(CheckoutFormModel model)
         {
             if (!this.ModelState.IsValid)
             {
@@ -149,7 +132,7 @@
                 return this.View(model);
             }
 
-            //await this.emailSender.SendEmailAsync(sender, "WebStore.bg", reciever, "Test", "Content");
+            // await this.emailSender.SendEmailAsync(sender, "WebStore.bg", reciever, "Test", "Content");
             cartId = await this.shoppingCartService.CreateCartAsync(user != null ? user.Id : null);
             this.HttpContext.Session.SetString(nameof(Cart), cartId);
 

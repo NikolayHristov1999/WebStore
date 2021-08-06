@@ -18,7 +18,7 @@
     public class DealersController : AdministrationController
     {
         private readonly IUsersService usersService;
-        private readonly IDealerService salesmanService;
+        private readonly IDealerService dealerService;
         private readonly IContactService contactService;
 
         public DealersController(
@@ -27,47 +27,34 @@
             IContactService contactService)
         {
             this.usersService = usersService;
-            this.salesmanService = salesmanService;
+            this.dealerService = salesmanService;
             this.contactService = contactService;
         }
 
         public IActionResult Index()
         {
-            var model = this.salesmanService.GetAllDealers<TableDealerViewModel>();
+            var model = this.dealerService.GetAllDealers<TableDealerViewModel>();
             return this.View(model);
         }
 
-        public IActionResult Details(string id)
+        public IActionResult Details(string dealerid)
         {
-            if (id == null)
+            if (dealerid == null)
             {
                 return this.NotFound();
             }
 
-            var model = this.salesmanService.GetDealerByUserId<DetailsDealerViewModel>(id);
+            var model = this.dealerService.GetDealerByUserId<DetailsDealerViewModel>(dealerid);
             if (model == null)
             {
                 return this.NotFound();
             }
 
-            var dealerSales = this.salesmanService.GetAllOrdersForSeller(id)
-                .OrderByDescending(x => x.CreatedOn);
-            var tableOrderModel = new List<TableOrderViewModel>();
+            var dealerSales = this.dealerService.GetAllOrdersForSeller<TableOrderViewModel>(dealerid)
+               .OrderByDescending(x => x.CreatedOn)
+               .ToList();
 
-            foreach (var order in dealerSales)
-            {
-                var contact = this.contactService.GetContactById(order.ContactId);
-                tableOrderModel.Add(new TableOrderViewModel
-                {
-                    SellerOrderId = order.Id,
-                    Name = contact.FirstName + " " + contact.LastName,
-                    Price = order.TotalPrice.ToString("f2"),
-                    Email = contact.Email,
-                    CreatedOn = order.CreatedOn,
-                });
-            }
-
-            model.DealersSales = tableOrderModel;
+            model.DealersSales = dealerSales;
 
             return this.View(model);
         }
@@ -81,7 +68,7 @@
                 return this.NotFound();
             }
 
-            if (!await this.salesmanService.ChangeDealerStatusAsync(id, status))
+            if (!await this.dealerService.ChangeDealerStatusAsync(id, status))
             {
                 this.TempData["Message"] = "Unavailable user or dealer status!";
             }

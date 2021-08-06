@@ -18,7 +18,7 @@
 
         public const string DemoPassword = "Admin123";
 
-        public const string NotEnoughQuantity = "Not enough quantity available";
+        public const string UnavailableProductOrNotEnoughQuantity = "The product is unavailable or there is not enough quantity available";
 
         public const int ProductsPerPage = 12;
 

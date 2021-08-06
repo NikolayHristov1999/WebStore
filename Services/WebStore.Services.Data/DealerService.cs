@@ -19,18 +19,21 @@
     {
         private readonly IDeletableEntityRepository<Dealer> dealerRepository;
         private readonly IDeletableEntityRepository<Item> itemRepository;
+        private readonly IDeletableEntityRepository<Review> reviewsRepository;
         private readonly IDeletableEntityRepository<SellerOrder> sellerOrderRepository;
         private readonly IUsersService usersService;
 
         public DealerService(
             IDeletableEntityRepository<Dealer> dealerRepository,
             IDeletableEntityRepository<Item> itemRepository,
+            IDeletableEntityRepository<Review> reviewsRepository,
             IDeletableEntityRepository<SellerOrder> sellerOrderRepository,
             IUsersService usersService,
             UserManager<ApplicationUser> userManager)
         {
             this.dealerRepository = dealerRepository;
             this.itemRepository = itemRepository;
+            this.reviewsRepository = reviewsRepository;
             this.sellerOrderRepository = sellerOrderRepository;
             this.usersService = usersService;
         }
@@ -42,17 +45,20 @@
                 .ToList();
         }
 
-        public IEnumerable<SellerOrder> GetAllOrdersForSeller(string userId)
+        public IEnumerable<T> GetAllOrdersForSeller<T>(string userId)
         {
             return this.sellerOrderRepository.All()
                  .Where(x => x.SellerId == userId)
+                 .To<T>()
                  .ToList();
         }
 
-        public SellerOrder GetOrderForSellerById(string orderId)
+        public T SellerOrderById<T>(string orderId)
         {
             return this.sellerOrderRepository.All()
-                .FirstOrDefault(x => x.Id == orderId);
+                .Where(x => x.Id == orderId)
+                .To<T>()
+                .FirstOrDefault();
         }
 
         public IEnumerable<Item> GetAllItemsBySellerOrderId(string sellerOrderId)
@@ -85,6 +91,28 @@
                 .Status.Equals(DealerStatus.Approved.ToString());
         }
 
+        public IEnumerable<T> AllOrdersForSellerInLastDays<T>(string userId, int days)
+        {
+            var date = DateTime.UtcNow.AddDays(days * -1).Date;
+            return this.sellerOrderRepository.All()
+                 .Where(x => x.SellerId == userId && x.CreatedOn >= date)
+                 .To<T>();
+        }
+
+        public int CountOfSalesForADay(string userId, DateTime day)
+        {
+            return this.sellerOrderRepository.All()
+                 .Where(x => x.SellerId == userId && x.CreatedOn.Date == day.Date)
+                 .Count();
+        }
+
+        public decimal SumOfSalesForADay(string userId, DateTime day)
+        {
+            return this.sellerOrderRepository.All()
+                 .Where(x => x.SellerId == userId && x.CreatedOn.Date == day.Date)
+                 .Sum(x => x.TotalPrice);
+        }
+
         public async Task<bool> ChangeDealerStatusAsync(string userId, string statusInput)
         {
             var isValidStatus = Enum.TryParse(typeof(DealerStatus), statusInput, true, out var status);
@@ -113,6 +141,13 @@
             }
 
             return true;
+        }
+
+        public double GetAverageRatingFromUsers(string userId)
+        {
+            return this.reviewsRepository.All()
+                .Where(x => x.Product.AddedByUserId == userId)
+                .Average(x => x.Stars);
         }
     }
 }
