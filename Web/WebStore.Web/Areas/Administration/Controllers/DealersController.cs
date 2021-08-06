@@ -37,20 +37,20 @@
             return this.View(model);
         }
 
-        public IActionResult Details(string dealerid)
+        public IActionResult Details(string id)
         {
-            if (dealerid == null)
+            if (id == null)
             {
                 return this.NotFound();
             }
 
-            var model = this.dealerService.GetDealerByUserId<DetailsDealerViewModel>(dealerid);
+            var model = this.dealerService.GetDealerByUserId<DetailsDealerViewModel>(id);
             if (model == null)
             {
                 return this.NotFound();
             }
 
-            var dealerSales = this.dealerService.GetAllOrdersForSeller<TableOrderViewModel>(dealerid)
+            var dealerSales = this.dealerService.GetAllOrdersForSeller<TableOrderViewModel>(id)
                .OrderByDescending(x => x.CreatedOn)
                .ToList();
 
