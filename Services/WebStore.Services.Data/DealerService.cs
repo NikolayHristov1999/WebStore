@@ -145,9 +145,15 @@
 
         public double GetAverageRatingFromUsers(string userId)
         {
-            return this.reviewsRepository.All()
-                .Where(x => x.Product.AddedByUserId == userId)
-                .Average(x => x.Stars);
+            var reviews = this.reviewsRepository.All()
+                .Where(x => x.Product.AddedByUserId == userId);
+
+            if (reviews.Count() > 0)
+            {
+                return reviews.Average(x => x.Stars);
+            }
+
+            return 0;
         }
     }
 }

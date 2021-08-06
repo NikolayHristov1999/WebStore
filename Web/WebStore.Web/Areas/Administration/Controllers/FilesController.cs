@@ -29,6 +29,11 @@
             var requestPath = requestedPath == null ? string.Empty : requestedPath.Replace("%2F", "/");
             var userId = this.User.GetId();
             var path = Path.Combine(GlobalConstants.UsersFileRootFolder, userId);
+            if (!Directory.Exists(Path.GetFullPath(path)))
+            {
+                Directory.CreateDirectory(Path.GetFullPath(path));
+            }
+
             var fullPath = Path.GetFullPath(Path.Combine(path, requestedPath ?? string.Empty));
             var urlPath = Path.Combine(UsersFilePath, userId, requestedPath ?? string.Empty);
 
