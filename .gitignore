@@ -361,5 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Web/WebStore.Web/wwwroot/UsersFiles/
+
 /Web/WebStore.Web/wwwroot/lib/
+/Web/WebStore.Web/wwwroot/UsersFiles
+/Web/WebStore.Web/wwwroot/images/products
