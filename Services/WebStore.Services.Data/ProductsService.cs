@@ -11,30 +11,17 @@
     using WebStore.Services.Mapping;
     using WebStore.Web.ViewModels.Administration.Products;
 
-    using static WebStore.Data.Common.DataConstants;
-
     public class ProductsService : IProductsService
     {
-        private const int MaximumCategoriesPerProduct = 3;
-
         private readonly IDeletableEntityRepository<Product> productsRepository;
-        private readonly IRepository<CategoryProduct> categoryProductRepository;
-        private readonly ICategoriesService categoriesService;
         private readonly ICategoriesProductsService categoriesProductsService;
-        private readonly IDealerService salesmanService;
 
         public ProductsService(
             IDeletableEntityRepository<Product> productRepository,
-            IRepository<CategoryProduct> categoryProductRepository,
-            ICategoriesService categoriesService,
-            ICategoriesProductsService categoriesProductsService,
-            IDealerService salesmanService)
+            ICategoriesProductsService categoriesProductsService)
         {
             this.productsRepository = productRepository;
-            this.categoryProductRepository = categoryProductRepository;
-            this.categoriesService = categoriesService;
             this.categoriesProductsService = categoriesProductsService;
-            this.salesmanService = salesmanService;
         }
 
         public async Task CreateAsync(CreateProductFormModel inputModel, string userId)
@@ -244,6 +231,18 @@
             }
 
             return product.AddedByUserId;
+        }
+
+        public async Task UpdateProductQuantityAsync(int productId, int quantity)
+        {
+            var product = this.productsRepository.All()
+                .FirstOrDefault(x => x.Id == productId);
+
+            product.AvailableQuantity -= quantity;
+
+            await this.productsRepository.SaveChangesAsync();
+
+            return;
         }
     }
 }

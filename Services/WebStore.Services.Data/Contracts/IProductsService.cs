@@ -52,5 +52,7 @@
         bool IsUserOwner(string userId, int productId);
 
         string GetProductDealerId(int productId);
+
+        Task UpdateProductQuantityAsync(int productId, int quantity);
     }
 }

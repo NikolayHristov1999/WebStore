@@ -103,7 +103,7 @@
                     <ul class="list-unstyled">
                         <li>asdasd <br /> </li>
                         <li>@(Model.Category != null ? Model.Category : "None")  <br /> </li>
-                        <li>In stock <br /></li>
+                        <li>@(Model.AvailableQuantity > 0 ? "In stock - " + Model.AvailableQuantity.ToString() : "Out of stock") <br /></li>
                         <li>China <br /></li>
                         <li>China <br /></li>
                     </ul>

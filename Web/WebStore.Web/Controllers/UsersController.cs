@@ -66,5 +66,19 @@
             this.TempData["Message"] = SuccessfulMessages.DealerRequestRecieved;
             return this.RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Wishlist()
+        {
+
+            return this.View();
+        }
+
+        public async Task<IActionResult> AddToWishlist(int id)
+        {
+            //var userId = this.User.GetId();
+            //await this.usersService.AddProductToWishlist(id, userId);
+
+            return this.PartialView();
+        }
     }
 }

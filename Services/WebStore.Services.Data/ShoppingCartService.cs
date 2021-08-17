@@ -156,6 +156,7 @@
 
             foreach (var item in items)
             {
+                await this.productsService.UpdateProductQuantityAsync(item.ProductId, item.Quantity);
                 var seller = this.productsService.GetProductDealerId(item.ProductId);
                 if (!sellerOrders.ContainsKey(seller))
                 {

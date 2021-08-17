@@ -43,6 +43,8 @@
         [Range(1, 5)]
         public byte Stars { get; set; }
 
+        public int AvailableQuantity { get; set; }
+
         public ListReviewsViewModel ProductReviews { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
