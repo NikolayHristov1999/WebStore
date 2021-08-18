@@ -10,6 +10,6 @@
     {
         IEnumerable<FileViewModel> GetFilesInFolder(string fullPath, string urlPath);
 
-        Task<bool> AddFileAsync(IFormFile file, string path);
+        Task<bool> AddFileAsync(IFormFile file, string path, string userId);
     }
 }

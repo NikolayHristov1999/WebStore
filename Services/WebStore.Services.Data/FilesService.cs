@@ -6,13 +6,21 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Http;
+    using WebStore.Common;
     using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels.Administration.Files;
 
     public class FilesService : IFilesService
     {
-        public async Task<bool> AddFileAsync(IFormFile file, string path)
+        public async Task<bool> AddFileAsync(IFormFile file, string path, string userId)
         {
+            var userRootFolder = Path.GetFullPath(Path.Combine(GlobalConstants.UsersFileRootFolder, userId));
+            var currentUserFilesSize = this.DirSize(new DirectoryInfo(userRootFolder));
+            if (file.Length + currentUserFilesSize > 1024 * 1024 * GlobalConstants.MaximumStorageInMB)
+            {
+                return false;
+            }
+
             if (file.Length > 0)
             {
                 using (var stream = File.Create(path + "/" + file.FileName))
@@ -70,11 +78,13 @@
             {
                 size += fi.Length;
             }
+
             DirectoryInfo[] dis = d.GetDirectories();
             foreach (DirectoryInfo di in dis)
             {
                 size += this.DirSize(di);
             }
+
             return size;
         }
     }

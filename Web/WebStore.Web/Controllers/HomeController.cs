@@ -3,13 +3,32 @@
     using System.Diagnostics;
 
     using Microsoft.AspNetCore.Mvc;
+    using WebStore.Common;
+    using WebStore.Services.Data.Contracts;
     using WebStore.Web.ViewModels;
+    using WebStore.Web.ViewModels.Home;
+    using WebStore.Web.ViewModels.Product;
 
     public class HomeController : BaseController
     {
+        private readonly IProductsService productsService;
+
+        public HomeController(IProductsService productsService)
+        {
+            this.productsService = productsService;
+        }
+
         public IActionResult Index()
         {
-            return this.View();
+            var model = new HomeIndexPageProductsViewModel
+            {
+                NewProducts = this.productsService
+                    .LatestProducts<ProductInListViewModel>(GlobalConstants.ProductPerCategoryInHomePage),
+                TopProducts = this.productsService
+                    .MostVisitedProducts<ProductInListViewModel>(GlobalConstants.ProductPerCategoryInHomePage),
+            };
+
+            return this.View(model);
         }
 
         public IActionResult Privacy()

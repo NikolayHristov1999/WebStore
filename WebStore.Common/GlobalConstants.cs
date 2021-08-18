@@ -22,6 +22,10 @@
 
         public const int ProductsPerPage = 12;
 
+        public const int ProductPerCategoryInHomePage = 8;
+
         public const int MaximumLengthNameInView = 40;
+
+        public const int MaximumStorageInMB = 50;
     }
 }

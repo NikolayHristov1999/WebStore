@@ -39,6 +39,10 @@
 
         IEnumerable<T> AllProductsInCategory<T>(int categoryId);
 
+        IEnumerable<T> LatestProducts<T>(int count);
+
+        IEnumerable<T> MostVisitedProducts<T>(int count);
+
         T ById<T>(int id);
 
         T ByIdWithDeleted<T>(int id);

@@ -101,10 +101,10 @@
 
             foreach (var file in model.AddFiles)
             {
-                this.filesService.AddFileAsync(file, Path.GetFullPath(folderPath));
+                this.filesService.AddFileAsync(file, Path.GetFullPath(folderPath), this.User.GetId());
             }
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction(nameof(this.Index), new { requestedPath = model.Path });
         }
     }
 }

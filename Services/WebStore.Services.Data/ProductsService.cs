@@ -176,6 +176,22 @@
                 .Take(productsPerPage);
         }
 
+        public IEnumerable<T> LatestProducts<T>(int count)
+        {
+            return this.productsRepository.All()
+                .OrderByDescending(x => x.CreatedOn)
+                .To<T>()
+                .Take(count);
+        }
+
+        public IEnumerable<T> MostVisitedProducts<T>(int count)
+        {
+            return this.productsRepository.All()
+                .OrderByDescending(x => x.Views)
+                .To<T>()
+                .Take(count);
+        }
+
         public async Task DeleteProductById(int id)
         {
             var product = this.GetProductById(id);
