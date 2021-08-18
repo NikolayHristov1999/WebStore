@@ -37,7 +37,7 @@
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Create(int id, CategoryFormModel model)
+        public async Task<IActionResult> Create(CategoryFormModel model)
         {
             if (!this.ModelState.IsValid)
             {

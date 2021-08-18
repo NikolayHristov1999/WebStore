@@ -27,11 +27,7 @@
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
-        {
-            return this.View();
-        }
-
+        [Authorize]
         public IActionResult BecomeDealer()
         {
             if (this.usersService.IsDealer(this.User.GetId()))
@@ -48,9 +44,12 @@
         public async Task<IActionResult> BecomeDealer(ContactDealerFormModel model)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-            model.Email = user.Email;
+            if (user != null)
+            {
+                model.Email = user.Email;
+            }
 
-            if (this.usersService.IsDealer(user.Id))
+            if (this.usersService.IsDealer(this.User.GetId()))
             {
                 this.TempData["Message"] = InformationMessages.DealerMessageAlreadyRecieved;
                 return this.RedirectToAction("Index", "Home");
@@ -69,14 +68,13 @@
 
         public IActionResult Wishlist()
         {
-
             return this.View();
         }
 
         public async Task<IActionResult> AddToWishlist(int id)
         {
-            //var userId = this.User.GetId();
-            //await this.usersService.AddProductToWishlist(id, userId);
+            // var userId = this.User.GetId();
+            // await this.usersService.AddProductToWishlist(id, userId);
 
             return this.PartialView();
         }
